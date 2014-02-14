@@ -44,19 +44,29 @@ setlocale(LC_ALL, 'C');
 // Make sure the internal encoding is UTF-8.
 mb_internal_encoding('UTF-8');
 
+$includes_path = VELOX_ROOT . '/framework/includes/';
+$classes_path = VELOX_ROOT . '/framework/classes/';
+
 // Include constants
-require_once VELOX_ROOT . '/framework/includes/constants.inc';
+require_once $includes_path . 'constants.inc';
+
+// Include interfaces
+require_once $includes_path . 'interface.templateengine.inc';
+
 
 // Include classes.
-require_once VELOX_ROOT . '/framework/classes/class.settings.inc';
-require_once VELOX_ROOT . '/framework/classes/class.url.inc';
-require_once VELOX_ROOT . '/framework/classes/class.module.inc';
-require_once VELOX_ROOT . '/framework/classes/class.velox.inc';
+require_once $classes_path . 'class.settings.inc';
+require_once $classes_path . 'class.url.inc';
+require_once $classes_path . 'class.module.inc';
+require_once $classes_path . 'class.velox.inc';
+require_once $classes_path . 'class.theme.inc';
+
+// Default template engine
+require_once $classes_path . 'class.phptemplate.inc';
 
 // TODO: Classes
 // require_once(VELOX_ROOT . '/core/includes/class.resource.inc');
 // require_once(VELOX_ROOT . '/core/includes/class.router.inc');
-// require_once(VELOX_ROOT . '/core/includes/class.theme.inc');
 // require_once(VELOX_ROOT . '/core/includes/class.database.inc');
 // require_once(VELOX_ROOT . '/core/includes/class.session.inc');
 // require_once(VELOX_ROOT . '/core/includes/class.message.inc');
