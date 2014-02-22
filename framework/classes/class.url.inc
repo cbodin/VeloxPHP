@@ -212,6 +212,17 @@ class Url {
   }
 
   /**
+   * Checks if we are on the front page. This is determined by
+   * checking if the requested path is empty.
+   *
+   * @return bool
+   */
+  static function isFront() {
+    $path = self::path();
+    return strcmp($path, '') === 0;
+  }
+
+  /**
    * Redirects the browser.
    *
    * @param string $url

@@ -8,7 +8,7 @@
  *
  * @package Velox
  */
-class PHPTemplate implements TemplateEngine {
+class PHPTemplate {
 
   /**
    * The file extensions for template files.
@@ -20,7 +20,7 @@ class PHPTemplate implements TemplateEngine {
    *
    * @var array
    */
-  private $templatePaths = array();
+  private static $templatePaths = array();
 
   /**
    * Renders a template file and returns the output.
@@ -43,7 +43,8 @@ class PHPTemplate implements TemplateEngine {
     // Remove unnecessary variables.
     unset($theme, $template_paths, $template);
 
-    // Extract the variables to make them available in the template file
+    // Extract the variables to make them available in the template
+    // file
     extract($variables);
 
     ob_start();
