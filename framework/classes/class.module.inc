@@ -191,7 +191,6 @@ class Module {
 
         if (is_dir(VELOX_ROOT . '/' . $module_path)) {
           self::$modules[$module] = $module_path;
-          self::includeModule($module, $module_path);
 
           // Stop after the first match in a directory
           continue 2;
@@ -200,6 +199,18 @@ class Module {
 
       // If we got here the module wasn't found.
       throw new Exception('Cannot find module ' . $module);
+    }
+
+    self::loadModules();
+  }
+
+  /**
+   * Loads all modules that was found in the self::addModules()
+   * method by including the module file.
+   */
+  private static function loadModules() {
+    foreach (self::$modules as $module_path => $module) {
+      self::includeModule($module, $module_path);
     }
   }
 
