@@ -119,6 +119,28 @@ class Url {
   }
 
   /**
+   * Generates a url to the currently active theme.
+   *
+   * @param string $path
+   *   The path to get a url for, relative to the theme directory.
+   * @param array $options optional
+   *   See self::generate().
+   *
+   * @return string
+   *   The url to the theme or to the chosen path relative to the
+   *   theme.
+   */
+  static function generateTheme($path = null, $options = array()) {
+    $theme_path = Theme::path();
+
+    if ($path !== null) {
+      $theme_path .= '/' . $path;
+    }
+
+    return self::generate($theme_path, $options);
+  }
+
+  /**
    * Returns the url we're currently on.
    *
    * @param array $options optional
