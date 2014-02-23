@@ -7,7 +7,7 @@
 Options -Indexes
 
 # Follow symbolic links in this directory.
-Options +FollowSymLinks
+Options +SymLinksIfOwnerMatch
 
 # Set the default handler.
 DirectoryIndex index.php index.html index.htm
