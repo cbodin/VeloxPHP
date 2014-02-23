@@ -412,7 +412,8 @@ class Velox {
   }
 
   /**
-   * Parses a theme css string and checks if its an internal or external link.
+   * Parses a theme css string and checks if its an internal or
+   * external link.
    *
    * @param string $media
    *   The media attribute of the style.
