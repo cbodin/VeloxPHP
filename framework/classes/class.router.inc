@@ -10,17 +10,19 @@
 class Router {
 
   /**
-   * Prints html and page template files wrapped around the content
+   * Prints html and page template files wrapped around the content.
    */
   const PAGE_OUTPUT_NORMAL = 0;
 
   /**
-   * Prints the returned data as json encoded without html and page template
+   * Prints the returned data as json encoded without html and page
+   * template.
    */
   const PAGE_OUTPUT_JSON = 1;
 
   /**
-   * Prints the returned data as plain text encoded without html and page template
+   * Prints the returned data as plain text encoded without html and
+   * page template.
    */
   const PAGE_OUTPUT_BLANK = 2;
 
@@ -96,7 +98,10 @@ class Router {
       }
 
       // Make sure this is an absolute path to the file.
-      if (isset($match['file']) && !preg_match('/^(?:\/|\\\\|\w:\\\\|\w:\/).*$/', $match['file'])) {
+      if (
+        isset($match['file']) &&
+        !preg_match('/^(?:\/|\\\\|\w:\\\\|\w:\/).*$/', $match['file'])
+      ) {
         $match['file'] = VELOX_ROOT . '/' . $match['file'];
       }
     }
@@ -111,7 +116,8 @@ class Router {
    * * The url is splitted into parts by a forward slash '/'.
    * * An exact match of an part (no wildcard) gives 1 point.
    * * A wildcard gives 0.5 points.
-   * * The points for each index is also calculated as: points / index + 1.
+   * * The points for each index is also calculated as:
+   *   points / index + 1.
    *
    * Sample routes for the url 'blog/entry/3':
    * * 'blog/entry/:num' will have ~1.67 points (1/0.5/~0.17).
@@ -132,7 +138,8 @@ class Router {
     $route_parts_count = sizeof($route_parts);
     $path_count = sizeof($path);
 
-    // If the route parts and the path parts arent the same, we do not have a match
+    // If the route parts and the path parts arent the same, we do not
+    // have a match.
     if ($route_parts_count != $path_count) {
       return 0;
     }
