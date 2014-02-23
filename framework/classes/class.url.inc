@@ -60,15 +60,14 @@ class Url {
    *   The url to the site root or the the chosen path.
    */
   static function generate($path = null, $options = array()) {
-    $defaults = array(
+    // Add defaults
+    $options += array(
       'absolute' => false,
       'query'    => array(),
       'fragment' => null,
       'scheme'   => self::https() ? 'https' : 'http',
       'clean'    => Settings::get('clean_urls', true),
     );
-
-    $options = array_merge($defaults, $options);
 
     $site_urls = self::get();
 
@@ -156,12 +155,11 @@ class Url {
    *   The current url
    */
   static function current($options = array()) {
-    $defaults = array(
+    // Add defaults
+    $options += array(
       'strip_query' => true,
       'absolute'    => true,
     );
-
-    $options = array_merge($defaults, $options);
 
     if (!$options['strip_query']) {
       $options['query'] = $_GET;
@@ -260,11 +258,10 @@ class Url {
    *                  Default: 302
    */
   static function redirect($url, $options = array()) {
-    $defaults = array(
+    // Add defaults
+    $options += array(
       'response_code' => 302,
     );
-
-    $options = array_merge($defaults, $options);
 
     if (stripos($url, 'http') !== 0) {
       // Override 'absolute' as some web browsers only accept
@@ -292,12 +289,11 @@ class Url {
    *                  Default: false
    */
   static function reload($options) {
-    $defaults = array(
+    // Add defaults
+    $options += array(
       'response_code' => 302,
       'strip_query'   => false,
     );
-
-    $options = array_merge($defaults, $options);
 
     $url = self::current(array(
       'strip_query' => $options['strip_query'],
