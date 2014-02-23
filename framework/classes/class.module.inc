@@ -209,7 +209,7 @@ class Module {
    * method by including the module file.
    */
   private static function loadModules() {
-    foreach (self::$modules as $module_path => $module) {
+    foreach (self::$modules as $module => $module_path) {
       self::includeModule($module, $module_path);
     }
   }
