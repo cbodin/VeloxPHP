@@ -61,7 +61,7 @@ class Resources {
    * <code>
    * $js = array(
    *  'type' => 'external',
-   *  'data' => '//ajax.googleapis.com/ajax/libs/jquery/latest/jquery.min.js',
+   *  'data' => '//cdn.example.com/libs/script/script.min.js',
    * );
    * Resources::addJs($js);
    * </code>
@@ -109,10 +109,10 @@ class Resources {
   static function addJs($info, $type = 'script') {
     // Handle setting explicitly
     if ($type == 'settings') {
-      $current_settings = self::$js['settings'];
+      $settings = self::$js['settings'];
 
       // Merge the new settings with the current ones
-      self::$js['settings'] = array_merge_recursive($current_settings, $info);
+      self::$js['settings'] = array_merge_recursive($settings, $info);
     }
     else {
       // Add defaults
@@ -190,14 +190,11 @@ class Resources {
    *   Array containing information about the style added.
    */
   static function addCss($info) {
-    // create a default options array
-    $defaults = array(
+    // Add defaults
+    $info += array(
       'media' => 'all',
       'type' => 'internal',
     );
-
-    // overwrite any defaults
-    $options = array_merge($defaults, $info);
 
     // add it to the css array
     self::$css[] = $options;
