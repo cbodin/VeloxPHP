@@ -1,3 +1,4 @@
 .DS_Store
 application/*
 !application/example.settings.php
+!application/files/.htaccess
