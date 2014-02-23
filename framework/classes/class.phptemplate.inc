@@ -7,6 +7,7 @@
  * class wich must implement the render method.
  *
  * @package Velox
+ * @since 1.0
  */
 class PHPTemplate {
 
@@ -23,32 +24,43 @@ class PHPTemplate {
   private static $templatePaths = array();
 
   /**
+   * Holds the currently rendered template file to keep it outside the
+   * render scope to make sure its not overwritten when we extract the
+   * variables.
+   *
+   * @var string
+   */
+  private static $renderTemplate;
+
+  /**
    * Renders a template file and returns the output.
    *
    * @param string $theme
    *   See PHPTemplate::getTemplate().
-   * @param array $template_paths
+   * @param array $paths
    *   See PHPTemplate::getTemplate().
-   * @param string $template.
+   * @param string $tmpl.
    *   See PHPTemplate::getTemplate().
    * @param array $variables
-   *   The variables that should be available to the template.
+   *   The variables that should be available to the template. These
+   *   will be extracted so array('name' => 'John') will be available
+   *   in the template as $name.
    *
    * @return string
    *   The rendered template output.
    */
-  static function render($theme, $template_paths, $template, $variables = array()) {
-    $template_path = self::getTemplate($theme, $template_paths, $template);
+  static function render($theme, $paths, $tmpl, $variables = array()) {
+    self::$renderTemplate = self::getTemplate($theme, $paths, $tmpl);
 
     // Remove unnecessary variables.
-    unset($theme, $template_paths, $template);
+    unset($theme, $paths, $tmpl);
 
     // Extract the variables to make them available in the template
-    // file
+    // file.
     extract($variables);
 
     ob_start();
-    include($template_path);
+    include(self::$renderTemplate);
     $content = ob_get_clean();
 
     return $content;
@@ -59,7 +71,7 @@ class PHPTemplate {
    *
    * @param string $theme
    *   The name of the theme.
-   * @param array $template_paths
+   * @param array $paths
    *   Array containing paths to all directories templates may be
    *   located inside. As themes can have a parent theme we need to
    *   do a search in both directories.
@@ -69,17 +81,14 @@ class PHPTemplate {
    * @return string
    *   The path to the template.
    */
-  private static function getTemplate($theme, $template_paths, $template) {
-    // Check if we got the template path cached.
-    if (isset(self::$templatePaths[$theme][$template])) {
-      $template_path = self::$templatePaths[$theme][$template];
-    }
-    else {
+  private static function getTemplate($theme, $paths, $template) {
+    // Check if we got the template path stored.
+    if (!isset(self::$templatePaths[$theme][$template])) {
       $template_path = false;
       $template_filename = $template . self::FILE_EXTENSION;
 
       // Loop through all paths and check if we got a match.
-      foreach ($template_paths as $path) {
+      foreach ($paths as $path) {
         $file_path = $path . '/' . $template_filename;
 
         if (is_file(VELOX_ROOT . '/' . $file_path)) {
@@ -87,10 +96,12 @@ class PHPTemplate {
           break;
         }
       }
+
+      // Store the path to the template.
+      self::$templatePaths[$theme][$template] = $template_path;
     }
 
-    // Cache the path to the template.
-    self::$templatePaths[$theme][$template] = $template_path;
+    $template_path = self::$templatePaths[$theme][$template];
 
     if ($template_path === false) {
       throw new Exception('Cannot find template: ' . $template);
