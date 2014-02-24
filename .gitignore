@@ -1,4 +1,16 @@
+# OS generated files
 .DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Do not commit application when doing framework development
 application/*
 !application/example.settings.php
 !application/files/.htaccess
+
+# Editor files
+.idea/*
