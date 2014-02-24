@@ -103,7 +103,7 @@ class Database {
    *   The key which identifies this connection.
    *
    * @return PDO
-   *   A pdo object connected to the speficied database.
+   *   A pdo object connected to the specified database.
    */
   static function get($key = null) {
     if ($key === null) {
@@ -126,6 +126,9 @@ class Database {
    *
    * @param string $key
    *   The database key defined in the app config.
+   *
+   * @throws Exception
+   *   When a database connection fails.
    */
   private static function connect($key) {
     $db_config = Settings::get('database', array());

@@ -88,6 +88,9 @@ class Module {
    *   The action which should be called.
    * @param mixed ... optional
    *   All additional arguments will be passed to the action callback.
+   *
+   * @return array
+   *   The result of all actions merged recursively.
    */
   static function invokeAction($action) {
     $args = func_get_args();

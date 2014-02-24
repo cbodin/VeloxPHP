@@ -91,7 +91,7 @@ class Url {
       }
     }
 
-    // Check if this is not a url to the frontpage.
+    // Check if this is not a url to the front page.
     if (!empty($path) && $path != '/') {
       // If clean urls are disabled, add index.php to the url.
       // Check if this is a url to a static file as we cannot add

@@ -70,6 +70,9 @@ class Theme {
    *
    * @param string $theme
    *   The name of the theme.
+   *
+   * @throws Exception
+   *   If the theme is not found.
    */
   static function setActive($theme) {
     // Make sure the theme exists
@@ -98,6 +101,12 @@ class Theme {
    *
    * @param string $theme optional
    *   The name of the theme.
+   *
+   * @throws Exception
+   *   If the theme can't be found.
+   *
+   * @return array
+   *   The theme configuration.
    */
   static function config($theme = null) {
     // Default to the currently active theme
@@ -178,7 +187,7 @@ class Theme {
    * Set variable to a specific base template.
    *
    * @param string $template
-   *   The template to add a variable to (html or page).
+   *   The template to add a variable to. (html or page)
    * @param string $variable
    *   The name of the variable to add.
    * @param mixed $value
@@ -191,6 +200,9 @@ class Theme {
   /**
    * Returns all previously set variables.
    *
+   * @param $template
+   *   The template file to get variables for. (html or page)
+   *
    * @return array
    */
   static function getVariables($template) {
@@ -198,7 +210,7 @@ class Theme {
   }
 
   /**
-   * Adds content either before or efter the main content
+   * Adds content either before or after the main content
    * inside the html template.
    *
    * @param string $position
@@ -383,7 +395,7 @@ class Theme {
   }
 
   /**
-   * Adds inherited js and css to subthemes from parents.
+   * Adds inherited js and css to sub themes from parents.
    */
   private static function parseSubthemes() {
     foreach (self::$registry as &$config) {
@@ -406,7 +418,7 @@ class Theme {
       );
 
       // Do not override the template paths with the parent themes
-      // templates. Add those who are not in the subtheme.
+      // templates. Add those who are not in the sub theme.
       $config['template_paths'] += $parent_config['template_paths'];
     }
   }

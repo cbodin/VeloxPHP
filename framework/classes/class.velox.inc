@@ -18,7 +18,7 @@ class Velox {
 
   /**
    * The page title - name separator. This is used when setting a
-   * title for a page or something other than the firstpage.
+   * title for a page or something other than the front page.
    *
    * With the title separator at "|" the title will look like
    * "About | Velox PHP" when the site name is Velox PHP and the title
@@ -64,10 +64,7 @@ class Velox {
     // Check if a matching route was found. If not, output the 404
     // page.
     if ($page_info !== false) {
-      // call the page callback
-      $content = false;
-
-      // Get the current theme if we get a falsey return from the page
+      // Get the current theme if we get a falsely return from the page
       // callback so we know which theme to output the 404-page in.
       $current_theme = Theme::getActive();
 
@@ -268,13 +265,13 @@ class Velox {
       // Let modules interact before the final output.
       Module::alterAction('htmlVariables', $html_variables);
 
-      // Concat body classes
+      // Concatenate body classes
       $html_variables['classes'] = implode(
         ' ',
         $html_variables['classes']
       );
 
-      // Concat page top and page bottom
+      // Concatenate page top and page bottom
       $html_variables['page_top'] = implode(
         $html_variables['page_top']
       );
@@ -309,7 +306,6 @@ class Velox {
    * @param string|null $title optional
    * @param bool $append_name optional
    *   Append the site name to the title.
-   * @param string $separator
    *
    * @return void
    */

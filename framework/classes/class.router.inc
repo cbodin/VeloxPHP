@@ -39,8 +39,8 @@ class Router {
    * * :alphanum    Matches any letters or numbers.
    * * :any         Matches any character.
    *
-   * A special case exists for the frontpage which is matched against
-   * :front only. So the frontpage route should be ':front'.
+   * A special case exists for the front page which is matched against
+   * :front only. So the front page route should be ':front'.
    *
    * @return bool|array
    *   The matched route or false if no route was found.
@@ -124,6 +124,12 @@ class Router {
    * * 'blog/:alpha/3' will have ~1.58 points (1/0.25/~0.33).
    * * 'blog/:alpha/:num' will have ~1.42 points (1/0.25/~0.17).
    *
+   * @param $path
+   *   The path to match a route against. This will always be the
+   *   current request path.
+   * @param $route
+   *   The route to match against a path.
+   *
    * @return int
    *   The score for the path based in a route.
    */
@@ -138,7 +144,7 @@ class Router {
     $route_parts_count = sizeof($route_parts);
     $path_count = sizeof($path);
 
-    // If the route parts and the path parts arent the same, we do not
+    // If the route parts and the path parts aren't the same, we do not
     // have a match.
     if ($route_parts_count != $path_count) {
       return 0;
@@ -198,7 +204,7 @@ class Router {
   }
 
   /**
-   * usort compare function for sorting by score.
+   * User sort compare function for sorting by score.
    *
    * @see match().
    */

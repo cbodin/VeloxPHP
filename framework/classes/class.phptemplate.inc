@@ -75,8 +75,11 @@ class PHPTemplate {
    *   Array containing paths to all directories templates may be
    *   located inside. As themes can have a parent theme we need to
    *   do a search in both directories.
-   * @param string $template.
+   * @param string $template
    *   The name of the template.
+   *
+   * @throws Exception
+   *   If template file is not found.
    *
    * @return string
    *   The path to the template.
