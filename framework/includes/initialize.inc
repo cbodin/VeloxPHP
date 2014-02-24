@@ -5,33 +5,6 @@ if (!defined('VELOX_ROOT')) {
 
 session_start();
 
-// Cleanup magic quotes if they are turned on.
-if (
-  function_exists('get_magic_quotes_gpc') &&
-  get_magic_quotes_gpc()
-) {
-  // Create lamba style unescaping function (for portability)
-  $quotes_sybase = strtolower(ini_get('magic_quotes_sybase'));
-  $unescape_function = 'str_replace("\'\'","\'",$value)';
-
-  if (empty($quotes_sybase) || $quotes_sybase === 'off') {
-    $unescape_function = 'stripslashes($value)';
-  }
-
-  $stripslashes_deep = create_function('&$value, $fn', '
-    if (is_string($value)) {
-      $value = ' . $unescape_function . ';
-    } else if (is_array($value)) {
-      foreach ($value as &$v) $fn($v, $fn);
-    }
-  ');
-
-  // Unescape data
-  $stripslashes_deep($_POST, $stripslashes_deep);
-  $stripslashes_deep($_GET, $stripslashes_deep);
-  $stripslashes_deep($_COOKIE, $stripslashes_deep);
-  $stripslashes_deep($_REQUEST, $stripslashes_deep);
-}
 
 // Send P3P Compact Policy (CP) headers to prevent IE from blocking
 // cookies.
@@ -60,11 +33,12 @@ require_once $classes_path . 'class.phptemplate.inc';
 require_once $classes_path . 'class.router.inc';
 require_once $classes_path . 'class.database.inc';
 require_once $classes_path . 'class.resources.inc';
+require_once $classes_path . 'class.request.inc';
 
-// TODO: Classes
-// require_once(VELOX_ROOT . '/core/includes/class.session.inc');
-// require_once(VELOX_ROOT . '/core/includes/class.message.inc');
-// require_once(VELOX_ROOT . '/core/includes/class.variable.inc');
+
+// TODO: require_once(VELOX_ROOT . '/core/includes/class.session.inc');
+// TODO: require_once(VELOX_ROOT . '/core/includes/class.message.inc');
+// TODO: require_once(VELOX_ROOT . '/core/includes/class.variable.inc');
 
 // Fake $_SERVER globals if the app is running via the cli as some
 // classes depends on them.
@@ -88,7 +62,7 @@ if (Settings::get('development', false)) {
   error_reporting(0);
 }
 
-// Include composer autoloader if it exists
+// Include composer autoload if it exists
 if (file_exists(VELOX_ROOT . '/vendor/autoload.php')) {
   require_once VELOX_ROOT . '/vendor/autoload.php';
 }
