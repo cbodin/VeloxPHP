@@ -34,9 +34,9 @@ require_once $classes_path . 'class.router.inc';
 require_once $classes_path . 'class.database.inc';
 require_once $classes_path . 'class.resources.inc';
 require_once $classes_path . 'class.request.inc';
+require_once $classes_path . 'class.session.inc';
 
 
-// TODO: require_once(VELOX_ROOT . '/core/includes/class.session.inc');
 // TODO: require_once(VELOX_ROOT . '/core/includes/class.message.inc');
 // TODO: require_once(VELOX_ROOT . '/core/includes/class.variable.inc');
 
