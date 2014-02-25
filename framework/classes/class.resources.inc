@@ -140,7 +140,7 @@ class Resources {
     if ($type !== null) {
       return self::$js[$type];
     }
-    
+
     return self::$js;
   }
 
@@ -229,12 +229,26 @@ class Resources {
    *   The html tag
    */
   static function buildHtmlTag($options) {
+    // Add defaults
+    $options += array(
+       'attributes' => array(),
+    );
+
     $tag = '<' . $options['name'];
 
-    if (isset($options['attributes'])) {
-      foreach ($options['attributes'] as $attribute => $value) {
-        $tag .= ' ' . $attribute . '="' . $value .'"';
+    foreach ($options['attributes'] as $attribute => $value) {
+      $tag .= ' ' . $attribute . '="';
+
+      // Handle class explicitly as we want to allow an array of
+      // class names.
+      if ($attribute == 'class' && is_array($value)) {
+        $tag .= implode(' ', $value);
       }
+      else {
+        $tag .= $value;
+      }
+
+      $tag .= '"';
     }
 
     $tag .= '>';
