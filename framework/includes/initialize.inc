@@ -35,8 +35,7 @@ require_once $classes_path . 'class.resources.inc';
 require_once $classes_path . 'class.request.inc';
 require_once $classes_path . 'class.session.inc';
 require_once $classes_path . 'class.message.inc';
-
-// TODO: require_once(VELOX_ROOT . '/core/includes/class.variable.inc');
+require_once $classes_path . 'class.variable.inc';
 
 // Fake $_SERVER globals if the app is running via the cli as some
 // classes depends on them.
