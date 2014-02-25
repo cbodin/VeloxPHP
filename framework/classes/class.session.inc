@@ -7,19 +7,19 @@
  * @package Velox
  * @since 1.0
  */
-Class Session {
+class Session {
 
-	/**
-	 * Sets a session key
-	 *
-	 * @param string $key
+  /**
+   * Sets a session key
+   *
+   * @param string $key
    *   The $_SESSION key to set.
-	 * @param mixed $value
+   * @param mixed $value
    *   The value to set.
-	 */
-	public static function set($key, $value) {
-		$_SESSION[$key] = $value;
-	}
+   */
+  public static function set($key, $value) {
+    $_SESSION[$key] = $value;
+  }
 
   /**
    * Gets a specific session value.
@@ -31,22 +31,22 @@ Class Session {
    *
    * @return mixed|null
    */
-	public static function get($key, $default = null) {
-		if (isset($_SESSION[$key])) {
-			return $_SESSION[$key];
-		}
+  public static function get($key, $default = null) {
+    if (isset($_SESSION[$key])) {
+      return $_SESSION[$key];
+    }
 
-		return $default;
-	}
+    return $default;
+  }
 
-	/**
-	 * Unset's a specific session key.
-	 *
-	 * @param string $key
+  /**
+   * Unset's a specific session key.
+   *
+   * @param string $key
    *   The key to remove
-	 */
-	public static function del($key) {
-		unset($_SESSION[$key]);
-	}
+   */
+  public static function del($key) {
+    unset($_SESSION[$key]);
+  }
 
 }
