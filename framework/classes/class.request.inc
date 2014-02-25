@@ -2,7 +2,8 @@
 /**
  * Velox request class
  *
- * Handles $_GET, $_POST, $_COOKIE and $_REQUEST
+ * Handles $_GET, $_POST and $_COOKIE cleanup from magic quotes
+ * without altering the original variables.
  *
  * @package Velox
  * @since 1.0
@@ -36,13 +37,6 @@ class Request {
    * @var array
    */
   private static $post = array();
-
-  /**
-   * Contains cleaned $_REQUEST variables.
-   *
-   * @var array
-   */
-  private static $request = array();
 
   /**
    * Contains cleaned $_COOKIE variables.
@@ -97,30 +91,6 @@ class Request {
     }
 
     return self::$post[$key];
-  }
-
-  /**
-   * Fetches request variables.
-   *
-   * @param string $key
-   *   The request key to fetch.
-   * @param mixed $default optional
-   *   The default value to get when the key doesn't exist.
-   *   Default: null
-   *
-   * @return mixed
-   */
-  static function request($key, $default = null) {
-    if (!isset($_REQUEST[$key])) {
-      return $default;
-    }
-
-    // Check if we got a cleaned value stored.
-    if (!isset(self::$request[$key])) {
-      self::$request[$key] = self::ensureClean($_REQUEST[$key]);
-    }
-
-    return self::$request[$key];
   }
 
   /**
