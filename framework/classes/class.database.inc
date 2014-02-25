@@ -3,7 +3,7 @@
   * Velox database class.
   *
   * Sets up PDO objects connected to specified databases.
-  * 
+  *
   * @package Velox
   * @since 1.0
   */
@@ -26,9 +26,8 @@ class Database {
   /**
    * Sets the active database key.
    *
-   * @param string $key The database key to set as active
-   *
-   * @return void
+   * @param string $key
+   *   The database key to set as active
    */
   static function setActive($key) {
     self::$activeDatabase = $key;
@@ -37,10 +36,84 @@ class Database {
   /**
    * Gets the active database key.
    *
-   * @return string The currently active key
+   * @return string
+   *   The currently active key
    */
   static function getActive() {
     return self::$activeDatabase;
+  }
+
+  /**
+   * Gets the driver of the selected database. If none is supplied it
+   * will default to the active.
+   *
+   * @param string $key optional
+   *   The database key.
+   *   Default: the active database.
+   *
+   * @throws Exception
+   *   If the database config for the key doesn't exist.
+   *
+   * @return string
+   *   The driver of the active database.
+   */
+  static function getDriver($key = null) {
+    if ($key === null) {
+      $key = self::getActive();
+    }
+
+    $db_config = Settings::get('database', array());
+
+    if (!isset($db_config[$key])) {
+      throw new Exception('Missing connection info for: ' . $key);
+    }
+
+    return $db_config[$key]['driver'];
+  }
+
+  /**
+   * Gets the name of the selected database. If none is supplied it
+   * will default to the active. This will be the file url of a sqlite
+   * database.
+   *
+   * @param string $key optional
+   *   The database key.
+   *   Default: the active database.
+   *
+   * @throws Exception
+   *   If the database config for the key doesn't exist.
+   *
+   * @return string
+   *   The name of the database if mysql or the filename if sqlite.
+   */
+  static function getName($key = null) {
+    if ($key === null) {
+      $key = self::getActive();
+    }
+
+    $db_config = Settings::get('database', array());
+
+    if (!isset($db_config[$key])) {
+      throw new Exception('Missing connection info for: ' . $key);
+    }
+
+    $driver = $db_config[$key]['driver'];
+
+    switch ($driver) {
+      case 'mysql':
+        $name = $db_config[$key]['name'];
+        break;
+
+      case 'sqlite':
+        $name = $db_config[$key]['file'];
+        break;
+
+      default:
+        $error = 'Unsupported database driver: ' . $driver;
+        throw new Exception($error);
+    }
+
+    return $name;
   }
 
   /**
@@ -82,7 +155,7 @@ class Database {
    * Checks if we got an open connection or creates a new one. This
    * allows for no connections to be made if a page request doesn't
    * need to query the database.
-   * 
+   *
    * Examples:
    *
    * * Get the default database connection.
@@ -90,7 +163,7 @@ class Database {
    * <code>
    * $db = Database::get();
    * </code>
-   * 
+   *
    * * Get a additional database connection.
    *
    * <code>
