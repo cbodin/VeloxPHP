@@ -5,7 +5,6 @@ if (!defined('VELOX_ROOT')) {
 
 session_start();
 
-
 // Send P3P Compact Policy (CP) headers to prevent IE from blocking
 // cookies.
 header('P3P: CP="CAO PSA OUR"');
@@ -35,9 +34,8 @@ require_once $classes_path . 'class.database.inc';
 require_once $classes_path . 'class.resources.inc';
 require_once $classes_path . 'class.request.inc';
 require_once $classes_path . 'class.session.inc';
+require_once $classes_path . 'class.message.inc';
 
-
-// TODO: require_once(VELOX_ROOT . '/core/includes/class.message.inc');
 // TODO: require_once(VELOX_ROOT . '/core/includes/class.variable.inc');
 
 // Fake $_SERVER globals if the app is running via the cli as some
