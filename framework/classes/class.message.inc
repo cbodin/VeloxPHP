@@ -120,7 +120,7 @@ class Message {
    *   Flag to indicate if the message queue should be cleared.
    *
    * @return string
-   *   All messages wrapped in li.message tags in an ul#messsages.
+   *   All messages wrapped in li.message tags in an ul#messages.
    */
   static function getString($clear = true) {
     $session = Session::get('velox', array());
@@ -130,23 +130,29 @@ class Message {
 
     // Build string with messages
     if (isset($session['messages'])) {
-      foreach ($session['messages'] as $message) {
-        $messages .= Resources::buildHtmlTag(array(
-          'name' => 'li',
-          'attributes' => array(
-            'class' => 'message',
-          ),
-          'content' => $message['message'],
-        ));
-      }
-
-      $messages = Resources::buildHtmlTag(array(
+      // TODO: Allow for these to be changed by class methods
+      $item_template = array(
+        'name' => 'li',
+        'attributes' => array(
+          'class' => array('message'),
+        ),
+      );
+      $wrapper_template = array(
         'name' => 'ul',
         'attributes' => array(
           'id' => 'messages',
         ),
-        'content' => $messages,
-      ));
+      );
+
+      foreach ($session['messages'] as $message) {
+        $item = $item_template;
+        $item['attributes']['class'][] = $message['severity'];
+        $item['content'] = $message['message'];
+        $messages .= Resources::buildHtmlTag($item);
+      }
+
+      $wrapper_template['content'] = $messages;
+      $messages = Resources::buildHtmlTag($wrapper_template);
     }
 
     if ($clear) {

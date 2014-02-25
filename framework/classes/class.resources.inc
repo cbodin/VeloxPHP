@@ -213,7 +213,7 @@ class Resources {
   }
 
   /**
-   * Builds a html tag from an array.
+   * Builds a valid HTML5 tag from an array.
    *
    * @param array $options
    *   An associative array containing:
@@ -263,4 +263,5 @@ class Resources {
 
     return $tag;
   }
+  
 }
