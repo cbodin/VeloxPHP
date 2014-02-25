@@ -227,7 +227,7 @@ class Variable {
       $sth->execute($placeholders);
       $table = $sth->fetchColumn();
 
-      if (!$table) {A
+      if (!$table) {
         switch ($config['database'][$active_db]['driver']) {
           case 'mysql':
             $query = '
