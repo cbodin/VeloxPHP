@@ -89,13 +89,10 @@ class Router {
 
     // Add defaults
     if ($match != false) {
-      if (!isset($match['type'])) {
-        $match['type'] = self::PAGE_OUTPUT_NORMAL;
-      }
-
-      if (!isset($match['callback arguments'])) {
-        $match['callback arguments'] = array();
-      }
+      $match += array(
+        'type' => self::PAGE_OUTPUT_NORMAL,
+        'callback arguments' => array(),
+      );
 
       // Make sure this is an absolute path to the file.
       if (
