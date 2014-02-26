@@ -61,6 +61,9 @@ class Velox {
     // Default delivery type
     $delivery_type = Router::PAGE_OUTPUT_NORMAL;
 
+    // Notify modules that we tried to find a matching route.
+    Module::invokeAction('routeMatch', $page_info);
+
     // Check if a matching route was found. If not, output the 404
     // page.
     if ($page_info !== false) {
@@ -279,21 +282,24 @@ class Velox {
         $html_variables['page_bottom']
       );
 
-      $html = Theme::render('html', $html_variables);
+      $content = Theme::render('html', $html_variables);
 
       header('Content-Type: text/html; charset=UTF-8');
       ob_end_flush();
-      print $html;
     }
     elseif ($delivery_type == Router::PAGE_OUTPUT_BLANK) {
       ob_end_flush();
-      print $content;
     }
     elseif ($delivery_type == Router::PAGE_OUTPUT_JSON) {
       header('Content-type: application/json');
       ob_end_clean();
-      print json_encode($content);
+      $content = json_encode($content);
     }
+
+    // Notify modules that we're about to display the page.
+    Module::invokeAction('display', $content, $delivery_type);
+
+    print $content;
   }
 
   /**
