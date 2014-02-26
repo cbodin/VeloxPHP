@@ -155,7 +155,7 @@ class Velox {
         array(
           'id' => 'jquery',
           'type' => 'external',
-          'data' => '//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js',
+          'data' => '//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js',
         ),
         array(
           'id' => 'jquery-fallback',
