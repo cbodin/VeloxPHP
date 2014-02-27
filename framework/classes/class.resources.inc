@@ -197,7 +197,7 @@ class Resources {
     );
 
     // add it to the css array
-    self::$css[] = $options;
+    self::$css[] = $info;
   }
 
   /**
