@@ -141,7 +141,9 @@ class Velox {
       $js = Resources::getJs();
 
       // Create the settings object
-      $js_settings = 'var Velox = Velox || {}; Velox.Settings = ';
+      $js_settings = 'var Velox = Velox || {};';
+      $js_settings .= 'Velox.App = {};';
+      $js_settings .= 'Velox.Settings = ';
       $js_settings .= json_encode($js['settings']) . ';';
 
       // Add all velox js at the top. Start with the settings as the
