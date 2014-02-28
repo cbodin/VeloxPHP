@@ -160,10 +160,8 @@ class ResourceCache {
   }
 
   private static function rewriteCssUrls($filepath, $contents) {
-    $css_dir = dirname($filepath);
-    $base = Url::generate();
-
-    self::$currentCssDir = $css_dir . '/';
+    $css_dir = dirname($filepath) . '/';
+    self::$currentCssDir = Url::generate($css_dir);
 
     $regexp = '/url\(\s*[\'"]?(?![a-z]+:|\/+)([^\'")]+)[\'"]?\s*\)/i';
     $callable = array(
@@ -185,7 +183,7 @@ class ResourceCache {
       $path = preg_replace($regexp, '$1', $path);
     }
 
-    return "url('" . Url::generate($path) . "')";
+    return "url('" . $path . "')";
   }
 
   private static function ensureCacheDirExists() {
