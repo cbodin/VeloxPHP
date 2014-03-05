@@ -35,9 +35,7 @@ $settings['application'] = array();
 $settings['development'] = true;
 
 // Enabled modules
-$settings['modules'] = array(
-  'SampleModule'
-);
+$settings['modules'] = array();
 
 // The default theme
 $settings['theme'] = 'velox';
