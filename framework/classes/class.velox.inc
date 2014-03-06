@@ -21,12 +21,12 @@ class Velox {
    * title for a page or something other than the front page.
    *
    * With the title separator at "|" the title will look like
-   * "About | Velox PHP" when the site name is Velox PHP and the title
+   * "About Velox PHP" when the site name is Velox PHP and the title
    * is set to "About".
    *
    * @var string
    */
-  private static $pageTitleSeparator = '|';
+  private static $pageTitleSeparator = ' | ';
 
   /**
    * Initializes the framework.
@@ -323,7 +323,7 @@ class Velox {
     }
 
     if ($append_name && !empty($title)) {
-      $title .= ' ' . self::$pageTitleSeparator;
+      $title .= self::$pageTitleSeparator;
     }
 
     if ($append_name) {
