@@ -125,7 +125,7 @@ class Language {
 			throw new Exception('Invalid locale: ' . $locale);
 		}
 
-		$file = BRUTAL_ROOT . '/app/translations/' . $locale . '.po';
+		$file = VELOX_ROOT . '/application/translations/' . $locale . '.po';
 
 		if (file_exists($file)) {
 			$poparser = new PoParser();
