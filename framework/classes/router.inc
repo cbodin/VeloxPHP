@@ -10,23 +10,6 @@
 class Router {
 
   /**
-   * Prints html and page template files wrapped around the content.
-   */
-  const PAGE_OUTPUT_NORMAL = 0;
-
-  /**
-   * Prints the returned data as json encoded without html and page
-   * template.
-   */
-  const PAGE_OUTPUT_JSON = 1;
-
-  /**
-   * Prints the returned data as plain text encoded without html and
-   * page template.
-   */
-  const PAGE_OUTPUT_BLANK = 2;
-
-  /**
    * Matches the current URL to a specific route.
    *
    * Calls all routes actions to get available routes.
@@ -90,7 +73,7 @@ class Router {
     // Add defaults
     if ($match != false) {
       $match += array(
-        'type' => self::PAGE_OUTPUT_NORMAL,
+        'output callback' => Response::NORMAL,
         'callback arguments' => array(),
       );
 

@@ -36,6 +36,7 @@ require_once $classes_path . 'request.inc';
 require_once $classes_path . 'session.inc';
 require_once $classes_path . 'message.inc';
 require_once $classes_path . 'variable.inc';
+require_once $classes_path . 'response.inc';
 
 // Fake $_SERVER globals if the app is running via the cli as some
 // classes depends on them.
