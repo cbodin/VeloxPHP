@@ -1,0 +1,3 @@
+SetHandler THIS_LINE_PREVENTS_SCRIPT_FILES_FROM_BEING_EXECUTED_BY_APACHE
+Options None
+Options +SymLinksIfOwnerMatch
