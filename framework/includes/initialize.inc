@@ -16,27 +16,17 @@ setlocale(LC_ALL, 'C');
 // Make sure the internal encoding is UTF-8.
 mb_internal_encoding('UTF-8');
 
-$includes_path = VELOX_ROOT . '/framework/includes/';
-$classes_path = VELOX_ROOT . '/framework/classes/';
+// Velox autoload function for classes.
+function velox_spl_autoload($class_name) {
+  $file = VELOX_ROOT . '/framework/classes/' . $class_name . '.inc';
+  if (file_exists($file)) {
+    require_once $file;
+  }
+}
+spl_autoload_register('velox_spl_autoload');
 
-// Includes
-require_once $includes_path . 'constants.inc';
-
-// Include classes.
-require_once $classes_path . 'velox.inc';
-require_once $classes_path . 'url.inc';
-require_once $classes_path . 'settings.inc';
-require_once $classes_path . 'module.inc';
-require_once $classes_path . 'theme.inc';
-require_once $classes_path . 'phptemplate.inc';
-require_once $classes_path . 'router.inc';
-require_once $classes_path . 'database.inc';
-require_once $classes_path . 'resources.inc';
-require_once $classes_path . 'request.inc';
-require_once $classes_path . 'session.inc';
-require_once $classes_path . 'message.inc';
-require_once $classes_path . 'variable.inc';
-require_once $classes_path . 'response.inc';
+// Include constants
+require_once VELOX_ROOT . '/framework/includes/constants.inc';
 
 // Fake $_SERVER globals if the app is running via the cli as some
 // classes depends on them.
