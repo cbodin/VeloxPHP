@@ -8,3 +8,7 @@ define('VELOX_TIME', (int) $_SERVER['REQUEST_TIME']);
 
 // Is the app running using the php cli?
 define('VELOX_CLI', php_sapi_name() === 'cli');
+
+// True if static method callables are working as a string in the form
+// "MyClass::myCallbackMethod". True for PHP >= 5.2.3
+define('VELOX_STATIC_METHOD_STRING_CALLABLE', version_compare(PHP_VERSION, '5.2.3', '>='));

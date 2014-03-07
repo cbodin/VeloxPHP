@@ -180,6 +180,7 @@ class Theme {
       $variables,
     );
 
+    Velox::ensureCallable($callable);
     return call_user_func_array($callable, $args);
   }
 

@@ -95,6 +95,7 @@ class Velox {
         }
       }
 
+      self::ensureCallable($page_info['callback']);
       $content = call_user_func_array(
         $page_info['callback'],
         $arguments
@@ -123,6 +124,7 @@ class Velox {
     // output method.
     Module::alterAction('render', $content, $page_info);
 
+    self::ensureCallable($output_callback);
     $output = call_user_func($output_callback, $content);
 
     // Finally let modules alter the content before its being
@@ -187,6 +189,18 @@ class Velox {
    */
   static function getTitleSeparator() {
     return self::$pageTitleSeparator;
+  }
+
+  /**
+   * Ensures that a class callable is an array for PHP < 5.2.3
+   */
+  static function ensureCallable(&$callable) {
+    // Return early if strings are allowed or if its already an array.
+    if (VELOX_STATIC_METHOD_STRING_CALLABLE || is_array($callable)) {
+      return;
+    }
+
+    $callable = explode('::', $callable);
   }
 
   /**

@@ -76,6 +76,7 @@ class Module {
    */
   static function alterAction($action, &$data) {
     foreach (self::implementsAction($action) as $callable) {
+      Velox::ensureCallable($callable);
       call_user_func_array($callable, array(&$data));
     }
   }
@@ -100,6 +101,7 @@ class Module {
 
     $return = array();
     foreach (self::implementsAction($action) as $callable) {
+      Velox::ensureCallable($callable);
       $result = call_user_func_array($callable, $args);
 
       if (isset($result) && is_array($result)) {
