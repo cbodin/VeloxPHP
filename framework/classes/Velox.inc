@@ -54,8 +54,8 @@ class Velox {
     // Check if we got a matching url route
     $page_info = Router::match();
 
-    // Default delivery type
-    $delivery_type = Response::NORMAL;
+    // Default output callback
+    $output_callback = Response::NORMAL;
 
     // Let modules alter the matched route
     Module::alterAction('routeMatch', $page_info);
