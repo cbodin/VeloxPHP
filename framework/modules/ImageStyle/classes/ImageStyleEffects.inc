@@ -69,6 +69,15 @@ class ImageStyleEffects {
       $dest_height
     );
 
+    if ($type == 'png') {
+      imagealphablending($new_image, true);
+      imagesavealpha($new_image, true);
+
+      // Fill the new image with transparent to make sure transparency
+      // is preserved when resizing.
+      imagefill($new_image, 0, 0, 0x7fff0000);
+    }
+
     imagecopyresampled(
       $new_image, $image,
       0, 0,
@@ -81,5 +90,115 @@ class ImageStyleEffects {
 
     return $new_image;
   }
+  
+  static function crop($image, $type, $options) {
+    // Validate options.
+    if (!isset($options['width']) || !isset($options['height'])) {
+      throw new Exception('Missing width or height.');
+    }
 
+    // Add defaults.
+    // The anchor is specified as "X Y". Valid X values are: "left",
+    // "center" and "right". Valid Y values are "top", "center" and
+    // "bottom".
+    $options += array(
+      'anchor' => 'center center',
+      'fill-background-jpeg' => '#ffffff',
+      'fill-background-png' => 'transparent',
+    );
+
+    // Validate anchors
+    $anchors = explode(' ', $options['anchor']);
+    if (sizeof($anchors) != 2) {
+      throw new Exception('Invalid anchor value');
+    }
+
+    $new_image = imagecreatetruecolor(
+      $options['width'],
+      $options['height']
+    );
+
+    if ($type == 'png') {
+      imagealphablending($new_image, true);
+      imagesavealpha($new_image, true);
+    }
+
+    switch ($type) {
+      case 'jpeg':
+        $rgb = self::hex2rgb($options['fill-background-jpeg']);
+        $color = imagecolorallocate(
+          $new_image,
+          $rgb[0], $rgb[1], $rgb[2]
+        );
+        break;
+      case 'png':
+        if ($options['fill-background-png'] == 'transparent') {
+          $color = 0x7fff0000;
+        }
+        else {
+          $rgb = self::hex2rgb($options['fill-background-png']);
+          $color = imagecolorallocate(
+            $new_image,
+            $rgb[0], $rgb[1], $rgb[2]
+          );
+        }
+        break;
+    }
+
+    imagefill($new_image, 0, 0, $color);
+
+    // Get image width and height
+    $width = imagesx($image);
+    $height = imagesy($image);
+
+    switch ($anchors[0]) {
+      case 'left':
+        $left = 0;
+        break;
+      case 'right':
+        $left = $options['width'] - $width;
+        break;
+      default:
+        $left = ceil(($options['width'] - $width) / 2);  
+    }
+
+    switch ($anchors[1]) {
+      case 'top':
+        $top = 0;
+        break;
+      case 'bottom':
+        $top = $options['height'] - $height;
+        break;
+      default:
+        $top = ceil(($options['height'] - $height) / 2); 
+    }
+
+    imagecopy(
+      $new_image, $image,
+      $left, $top, 
+      0, 0, 
+      $width, $height
+    );
+
+    imagedestroy($image);
+
+    return $new_image;
+  }
+
+  private static function hex2rgb($hex) {
+    $hex = str_replace('#', '', $hex);
+
+    if (strlen($hex) == 3) {
+      $r = hexdec(substr($hex, 0, 1) . substr($hex, 0, 1));
+      $g = hexdec(substr($hex, 1, 1) . substr($hex, 1, 1));
+      $b = hexdec(substr($hex, 2, 1) . substr($hex, 2, 1));
+    }
+    else {
+      $r = hexdec(substr($hex, 0, 2));
+      $g = hexdec(substr($hex, 2, 2));
+      $b = hexdec(substr($hex, 4, 2));
+    }
+
+    return array($r, $g, $b);
+  }
 }

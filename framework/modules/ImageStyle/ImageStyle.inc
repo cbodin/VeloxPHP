@@ -67,6 +67,11 @@ class ImageStyle {
     $source = VELOX_ROOT . '/' . $image;
     $image_gd = call_user_func($create_function, $source);
 
+    if ($image_type == 'png') {
+      imagealphablending($image_gd, true);
+      imagesavealpha($imageg, true);
+    }
+
     foreach ($style_info as $effect) {
       $args = array(
         $image_gd,
