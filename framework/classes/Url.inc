@@ -288,7 +288,7 @@ class Url {
    *                  a reload.
    *                  Default: false
    */
-  static function reload($options) {
+  static function reload($options = array()) {
     // Add defaults
     $options += array(
       'response_code' => 302,
