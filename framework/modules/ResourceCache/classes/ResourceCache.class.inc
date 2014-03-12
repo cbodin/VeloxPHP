@@ -113,6 +113,7 @@ class ResourceCache {
       }
 
       file_put_contents(VELOX_ROOT . '/' . $filename, $data);
+      chmod(VELOX_ROOT . '/' . $filename, 0666);
     }
 
     return $filename;
@@ -154,6 +155,7 @@ class ResourceCache {
       }
 
       file_put_contents(VELOX_ROOT . '/' . $filename, $data);
+      chmod(VELOX_ROOT . '/' . $filename, 0666);
     }
 
     return $filename;
@@ -191,7 +193,7 @@ class ResourceCache {
 
     if (!is_dir($cache_dir)) {
       mkdir($cache_dir);
-      chmod($cache_dir, 0777);
+      chmod($cache_dir, 0666);
     }
   }
 
