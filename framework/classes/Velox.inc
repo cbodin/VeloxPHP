@@ -210,7 +210,9 @@ class Velox {
    *   The content of the 404 page.
    */
   private static function error404() {
+    header('HTTP/1.0 404 Not Found');
     self::setTitle('Page not found');
+    
     return 'Page not found: ' . Url::path();
   }
 
