@@ -1,6 +1,6 @@
 <?php
 // Load the po parser class
-Module::loadInclude('language', 'poparser.php');
+Module::loadInclude('Language', 'poparser.php');
 
 /**
  * Language class.
