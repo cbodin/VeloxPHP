@@ -27,6 +27,13 @@ class Resources {
   private static $css = array();
 
   /**
+   * Stores all head elements.
+   *
+   * @var array
+   */
+  private static $htmlHead = array();
+
+  /**
    * Contains all void elements in valid HTML as defined on
    * http://www.w3.org/TR/html-markup/syntax.html
    *
@@ -210,6 +217,29 @@ class Resources {
    */
   static function getCss() {
     return self::$css;
+  }
+
+  /**
+   * Adds a element to the html head.
+   *
+   * These will later be built using Resources::buildHtmlTag(). The
+   * 'htmlVariables' alter action can be used to add/remove tags
+   * before they are being processed.
+   *
+   * @param array $element
+   *   @see Resources::buildHtmlTag();
+   */
+  static function addHtmlHead($element) {
+    self::$htmlHead[] = $element;
+  }
+
+  /**
+   * Returns all previously set html head elements.
+   *
+   * @return array
+   */
+  static function getHtmlHead() {
+    return self::$htmlHead;
   }
 
   /**

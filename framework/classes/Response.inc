@@ -169,12 +169,33 @@ class Response {
     $html_variables = Theme::getVariables('html');
 
     // Add default variables
+    $html_variables['language'] = Settings::get('language');
     $html_variables['content'] = $page_content;
     $html_variables['classes'] = Theme::getBodyClasses();
     $html_variables['js'] = $js_html;
     $html_variables['css'] = $css_html;
     $html_variables['page_top'] = Theme::getPage('top');
     $html_variables['page_bottom'] = Theme::getPage('bottom');
+
+    // Add default html head elements
+    $html_head = Resources::getHtmlHead();
+
+    // Force ie to not use compatibility mode and use chrome frame
+    // when installed. 
+    $html_head[] = array(
+      'name' => 'meta',
+      'attributes' => array(
+        'http-equiv' => 'X-UA-Compatible',
+        'content' => 'IE=edge,chrome=1',
+      ),
+    );
+
+    $html_head[] = array(
+      'name' => 'title',
+      'content' => Velox::getTitle(),
+    );
+
+    $html_variables['head'] = $html_head;
 
     // Let modules interact before the final output.
     Module::alterAction('htmlVariables', $html_variables);
@@ -191,6 +212,18 @@ class Response {
     );
     $html_variables['page_bottom'] = implode(
       $html_variables['page_bottom']
+    );
+
+    // Build html tags of the head
+    $html_variables['head'] = array_map(
+      array('Resources', 'buildHtmlTag'),
+      $html_variables['head']
+    );
+
+    // Concatenate html head
+    $html_variables['head'] = implode(
+      "\r\n",
+      $html_variables['head']
     );
 
     return Theme::render('html', $html_variables);

@@ -161,7 +161,6 @@ class Velox {
     }
 
     self::$pageTitle = $title;
-    Theme::setVariable('html', 'page_title', $title);
   }
 
   /**

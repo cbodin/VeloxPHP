@@ -44,5 +44,8 @@ $settings['theme'] = 'velox';
 // http://php.net/manual/en/timezones.php
 $settings['timezone'] = 'Europe/Stockholm';
 
+// The lang attribute of the html tag.
+$settings['language'] = 'en';
+
 // Turn off clean urls.
 // $settings['clean_urls'] = false;
