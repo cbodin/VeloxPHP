@@ -49,3 +49,8 @@ $settings['language'] = 'en';
 
 // Turn off clean urls.
 // $settings['clean_urls'] = false;
+
+// Specify a cron key which can be used to call the cron.php file via
+// http. If not configured, the cron.php file can only be called using
+// the php cli.
+// $settings['cron_key'] = '';
