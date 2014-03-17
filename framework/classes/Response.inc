@@ -61,6 +61,7 @@ class Response {
           'scheme' => 'https',
           'absolute' => true,
         )),
+        'urlPath' => Url::path(null, true),
         'themePath' => Theme::path(),
       ),
     ), 'settings');

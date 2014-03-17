@@ -86,6 +86,32 @@
   };
 
   /**
+   * Returns a specific part of the current path. This will not be
+   * updated when the href is changed using history api.
+   *
+   * @param {Integer} index optional
+   *   A specific position to get the path at. If omitted or null the
+   *   path will be returned either as a string or array depending on
+   *   the asArray parameter.
+   *   Default: none
+   * @param {Boolean} asArray optional
+   *   Returns the complete path as an array instead of a string.
+   *
+   * @return {String|Array}
+   */
+  Velox.Url.path = function(index, asArray) {
+    if (!isNaN(index) && isFinite(index) && index !== null) {
+      return Velox.Settings.Framework.urlPath[index];
+    }
+
+    if (asArray) {
+      return Velox.Settings.Framework.urlPath;
+    }
+
+    return Velox.Settings.Framework.urlPath.join('/');
+  };
+
+  /**
    * Checks if we're on a secure connection.
    *
    * @type {Function}
