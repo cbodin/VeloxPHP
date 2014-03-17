@@ -207,9 +207,16 @@ class Velox {
    */
   private static function error404() {
     header('HTTP/1.0 404 Not Found');
-    self::setTitle('Page not found');
+
+    $title = 'Page not found';
+    $content = Theme::render('error-404');
+
+    // Let modules alter the title and content for the 404 page.
+    Module::alterAction('error404', $title, $content);
+
+    self::setTitle($title);
     
-    return 'Page not found: ' . Url::path();
+    return $content;
   }
 
 }
