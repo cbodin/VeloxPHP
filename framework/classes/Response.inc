@@ -40,12 +40,28 @@ class Response {
     // Add the theme resources
     self::addThemeResources();
 
-    // Add local jquery path to the js settings.
+    // Add local jquery path, http/https BasePath, fullPath and
+    // themePath to the js settings.
     Resources::addJs(array(
       'Framework' => array(
         'jqueryPath' => Url::generateTheme('js/jquery.min.js', array(
           'theme' => 'velox',
         )),
+        'httpBasePath' => Url::generate(null, array(
+          'scheme' => 'http',
+        )),
+        'httpsBasePath' => Url::generate(null, array(
+          'scheme' => 'https',
+        )),
+        'httpFullPath' => Url::generate(null, array(
+          'scheme' => 'http',
+          'absolute' => true,
+        )),
+        'httpsFullPath' => Url::generate(null, array(
+          'scheme' => 'https',
+          'absolute' => true,
+        )),
+        'themePath' => Theme::path(),
       ),
     ), 'settings');
 
