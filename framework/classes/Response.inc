@@ -42,9 +42,11 @@ class Response {
 
     // Add local jquery path to the js settings.
     Resources::addJs(array(
-      'jqueryPath' => Url::generateTheme('js/jquery.min.js', array(
-        'theme' => 'velox',
-      )),
+      'Framework' => array(
+        'jqueryPath' => Url::generateTheme('js/jquery.min.js', array(
+          'theme' => 'velox',
+        )),
+      ),
     ), 'settings');
 
     /**
