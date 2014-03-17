@@ -42,7 +42,9 @@ class Response {
 
     // Add local jquery path to the js settings.
     Resources::addJs(array(
-      'jqueryPath' => Url::generate('framework/js/jquery.min.js'),
+      'jqueryPath' => Url::generateTheme('js/jquery.min.js', array(
+        'theme' => 'velox',
+      )),
     ), 'settings');
 
     /**
@@ -50,33 +52,20 @@ class Response {
      */
     $js = Resources::getJs();
 
-    // Create the settings object
+    // Create the Velox js object.
     $js_settings = 'var Velox = Velox || {};';
     $js_settings .= 'Velox.App = {};';
     $js_settings .= 'Velox.Settings = ';
     $js_settings .= json_encode($js['settings']) . ';';
 
-    // Add all velox js at the top. Start with the settings as the
-    // other velox js depends in it.
+    // Add the Velox js object to the scripts.
     $velox_js = array(
       array(
-        'id' => 'velox-settings',
+        'id' => 'velox',
         'type' => 'inline',
         'data' => $js_settings,
       ),
-      array(
-        'id' => 'jquery',
-        'type' => 'external',
-        'data' => '//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js',
-      ),
-      array(
-        'id' => 'jquery-fallback',
-        'type' => 'internal',
-        'data' => 'framework/js/jquery.fallback.js',
-      ),
     );
-
-    // Add the framework js at the top.
     $js['script'] = array_merge($velox_js, $js['script']);
 
     // Let modules interact with the js before the final output.
