@@ -37,9 +37,6 @@ class Velox {
     // Add enabled modules
     Module::addModules();
 
-    // Initialize the theme class
-    Theme::initialize();
-
     // Set the default title
     self::setTitle();
 

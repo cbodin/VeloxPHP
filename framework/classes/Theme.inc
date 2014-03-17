@@ -53,19 +53,6 @@ class Theme {
   );
 
   /**
-   * Initialization, sets up theme registry and sets the default
-   * theme.
-   */
-  static function initialize() {
-    self::findThemes();
-    self::parseConfigs();
-    self::parseSubthemes();
-
-    $theme = Settings::get('theme');
-    self::setActive($theme);
-  }
-
-  /**
    * Sets the current theme.
    *
    * @param string $theme
@@ -75,11 +62,6 @@ class Theme {
    *   If the theme is not found.
    */
   static function setActive($theme) {
-    // Make sure the theme exists
-    if (!isset(self::$registry[$theme])) {
-      throw new Exception('Missing theme: ' . $theme);
-    }
-
     self::$theme = $theme;
   }
 
@@ -90,6 +72,10 @@ class Theme {
    *   The current theme.
    */
   static function getActive() {
+    if (!isset(self::$theme)) {
+      self::$theme = Settings::get('theme');
+    }
+
     return self::$theme;
   }
 
@@ -111,11 +97,16 @@ class Theme {
   static function config($theme = null) {
     // Default to the currently active theme
     if ($theme === null) {
-      $theme = self::$theme;
+      $theme = self::getActive();
+    }
+
+    // Build the theme registry for the theme.
+    if (!isset(self::$registry[$theme])) {
+      self::buildConfig($theme);
     }
 
     // Make sure the theme exists
-    if (!isset(self::$registry[$theme])) {
+    if (self::$registry[$theme] === false) {
       throw new Exception('Missing theme: ' . $theme);
     }
 
@@ -160,11 +151,6 @@ class Theme {
    *   The rendered template output.
    */
   static function render($tmpl, $variables = array(), $theme = null) {
-    // Default to the active theme
-    if ($theme === null) {
-      $theme = self::getActive();
-    }
-
     // Get the theme config
     $config = self::config($theme);
 
@@ -271,106 +257,132 @@ class Theme {
   }
 
   /**
-   * Sets up the theme registry.
+   * Builds the theme config.
+   *
+   * @param string $theme
+   *   The name of the theme.
    */
-  private static function findThemes() {
-    // Search for themes.
-    $core = glob(VELOX_ROOT . '/framework/themes/*', GLOB_ONLYDIR);
-    $app = glob(VELOX_ROOT . '/application/themes/*', GLOB_ONLYDIR);
+  private static function buildConfig($theme) {
+    $path = self::getThemePath($theme);
 
-    // Add the app themes last, so they will overwrite core themes if
-    // provided with the same theme name.
-    $themes = array_merge($core, $app);
+    if ($path === false) {
+      self::$registry[$theme] = false;
+    }
+    else {
+      $config = self::readConfigFile($path);
 
-    // Get theme name and cleanup path.
-    foreach ($themes as $theme) {
-      $theme_name = basename($theme);
-
-      $root_length = strlen(VELOX_ROOT . '/');
-      $theme_path = substr_replace($theme, '', 0, $root_length);
-
-      self::$registry[$theme_name] = array(
-        'name' => $theme_name,
-        'path' => $theme_path,
-        'js' => array(),
-        'css' => array(),
-        'parent' => false,
+      // Add defaults. The default parent should always be the velox
+      // theme so we get templates for 404-pages etc.
+      $config += array(
+        'name' => $theme,
+        'path' => $path,
+        'js'   => array(),
+        'css'  => array(),
+        'parent' => $theme == 'velox' ? false : 'velox',
         'template_paths' => array(
-          $theme_path . '/templates' 
+          $path . '/templates' 
         ),
+        'template_engine' => 'PHPTemplate',
       );
+
+      if ($config['parent']) {
+        self::addParentConfig($config);
+      }
+
+      self::$registry[$theme] = $config;
     }
   }
 
   /**
-   * Parses the theme configs.
+   * Finds the correct path of the theme, either in the framework
+   * or the application folder.
+   *
+   * @param string $theme
+   *   The name of the theme.
+   *
+   * @return boolean|string
+   *   false if the theme was not found. The internal path to the
+   *   theme if found.
    */
-  private static function parseConfigs() {
-    foreach (self::$registry as &$config) {
-      $config_file = VELOX_ROOT . '/' . $config['path'];
-      $config_file .= '/theme.config.inc';
+  private static function getThemePath($theme) {
+    $paths = array(
+      'framework/themes/' . $theme,
+      'application/themes/' . $theme,
+    );
 
-      // We do not *require* a theme config file
-      if (!is_file($config_file)) {
-        continue;
+    foreach ($paths as $path) {
+      if (is_dir(VELOX_ROOT . '/' . $path)) {
+        return $path;
       }
+    }
 
-      // Unset variables from previous loop
-      unset($parent, $js, $css, $template_engine);
+    return false;
+  }
 
-      include $config_file;
+  /**
+   * Reads and parses the theme config file.
+   *
+   * @param string $path
+   *   The internal path to the theme.
+   */
+  private static function readConfigFile($path) {
+    $config_file = VELOX_ROOT . '/' . $path . '/theme.config.inc';
+    $config = array();
 
-      // Check if this is a subtheme and parse the parent themes
-      // config
-      if (isset($parent)) {
-        $config['parent'] = $parent;
-      }
+    // We do not require a theme config file
+    if (!is_file($config_file)) {
+      return $config;
+    }
 
-      // Check if this theme is using another template engine
-      if (isset($template_engine)) {
-        $config['template_engine'] = $template_engine;
-      }
-      else {
-        // Default to the built in engine.
-        $config['template_engine'] = 'PHPTemplate';
-      }
+    include $config_file;
 
-      if (isset($js)) {
-        foreach ($js as $script) {
-          // check if its a internal or external js file
-          if (!self::isExternal($script)) {
-            $script = $config['path'] . '/' . $script;
-          }
+    // Check if this is a subtheme
+    if (isset($parent)) {
+      $config['parent'] = $parent;
+    }
 
-          $config['js'][] = $script;
+    // Check if this theme is using another template engine
+    if (isset($template_engine)) {
+      $config['template_engine'] = $template_engine;
+    }
+
+    if (isset($js)) {
+      foreach ($js as $script) {
+        // check if its a internal or external js file
+        if (!self::isExternal($script)) {
+          $script = $path . '/' . $script;
         }
-      }
 
-      if (isset($css)) {
-        foreach ($css as $style) {
-          // If the style value is an array, this is a media
-          // specific stylesheet.
-          if (is_array($style)) {
-            foreach ($style as $media => $media_style) {
-              // check if its a internal or external css file
-              if (!self::isExternal($media_style)) {
-                $media_style = $config['path'] . '/' . $media_style;
-              }
-              
-              $config['css'][][$media] = $media_style;
-            }
-          }
-          else {
+        $config['js'][] = $script;
+      }
+    }
+
+    if (isset($css)) {
+      foreach ($css as $style) {
+        // If the style value is an array, this is a media
+        // specific stylesheet.
+        if (is_array($style)) {
+          foreach ($style as $media => $media_style) {
             // check if its a internal or external css file
-            if (!self::isExternal($style)) {
-              $style = $config['path'] . '/' . $style;
+            if (!self::isExternal($media_style)) {
+              $media_style = $path . '/' . $media_style;
             }
             
-            $config['css'][] = $style;
+            $config['css'][][$media] = $media_style;
           }
+        }
+        else {
+          // check if its a internal or external css file
+          if (!self::isExternal($style)) {
+            $style = $path . '/' . $style;
+          }
+          
+          $config['css'][] = $style;
         }
       }
     }
+
+    return $config;
   }
 
   /**
@@ -396,32 +408,32 @@ class Theme {
   }
 
   /**
-   * Adds inherited js and css to sub themes from parents.
+   * Adds inherited js and css to a child theme from a parent theme.
+   *
+   * @param array $config
+   *   The sub theme's config.
    */
-  private static function parseSubthemes() {
-    foreach (self::$registry as &$config) {
-      // Skip themes which have no parent theme
-      if ($config['parent'] == false) {
-        continue;
-      }
+  private static function addParentConfig(&$config) {
+    // Fetch parent config
+    $parent_config = self::config($config['parent']);
 
-      // Fetch parent config
-      $parent_config = self::config($config['parent']);
-
-      // Merge js and css.
-      $config['js'] = array_merge(
-        $parent_config['js'],
-        $config['js']
-      );
-      $config['css'] = array_merge(
-        $parent_config['css'],
-        $config['css']
-      );
-
-      // Do not override the template paths with the parent themes
-      // templates. Add those who are not in the sub theme.
-      $config['template_paths'] += $parent_config['template_paths'];
-    }
+    // Append the js, css and template paths from the parent theme.
+    // The order here is important as we want the parent themes js and
+    // css first. However, the template paths should be in the
+    // reversed order as templates in the child theme should always
+    // preceed the parents.
+    $config['js'] = array_merge(
+      $parent_config['js'],
+      $config['js']
+    );
+    $config['css'] = array_merge(
+      $parent_config['css'],
+      $config['css']
+    );
+    $config['template_paths'] = array_merge(
+      $config['template_paths'],
+      $parent_config['template_paths']
+    );
   }
 
 }
