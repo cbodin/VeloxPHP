@@ -71,13 +71,26 @@ class Module {
    *
    * @param string $action
    *   The action which should be called.
-   * @param mixed $data
+   * @param... mixed $data
    *   The data which will be passed to the action.
    */
-  static function alterAction($action, &$data) {
+  static function alterAction($action, &$data1 = null, &$data2 = null) {
+    $args = func_get_args();
+    $args_num = sizeof($args);
+
+    $arguments = array();
+
+    if ($args_num >= 2) {
+      $arguments[] = &$data1;
+    }
+
+    if ($args_num >= 3) {
+      $arguments[] = &$data2;
+    }
+
     foreach (self::implementsAction($action) as $callable) {
       Velox::ensureCallable($callable);
-      call_user_func_array($callable, array(&$data));
+      call_user_func_array($callable, $arguments);
     }
   }
 
