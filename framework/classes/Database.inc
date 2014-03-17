@@ -221,7 +221,7 @@ class Database {
       case 'mysql':
         $pdo_args[0] .= 'host=' . $db_info['host'];
         $pdo_args[0] .= ';dbname=' . $db_info['name'];
-        $pdo_args[0] .= ';charset=UTF-8';
+        $pdo_args[0] .= ';charset=utf-8';
 
         $pdo_args[1] = $db_info['user'];
         $pdo_args[2] = $db_info['pass'];
