@@ -3,9 +3,30 @@
   Velox.Facebook = {};
 
   Velox.Facebook.isReady = false;
-
+  Velox.Facebook.pageInfoChangeInterval = 50;
+  Velox.Facebook.pageInfoChangeEnabled = false;
+  Velox.Facebook.lastPageInfo = {};
   Velox.Facebook.events = {
-    ready: []
+    ready: [],
+    pageInfoChange: []
+  };
+
+  Velox.Facebook.pageInfoChange = function() {
+    var that = this;
+
+    FB.Canvas.getPageInfo(function(info) {
+      // Loop trough all info and see if any properties has changed.
+      for (var k in info) {
+        if (that.lastPageInfo[k] != info[k]) {
+          that.trigger('pageInfoChange', info);
+          break;
+        }
+      }
+
+      setTimeout(function() {
+        that.pageInfoChange();
+      }, that.pageInfoChangeInterval);
+    });
   };
 
   Velox.Facebook.on = function(event, callback) {
@@ -15,12 +36,24 @@
         return;
       }
     }
+    else if (event == 'pageInfoChange' && this.isReady) {
+      this.pageInfoChangeEnabled = true;
+      this.pageInfoChange();
+    }
 
     this.events[event].push(callback);
   };
 
   Velox.Facebook.trigger = function(event, data) {
     if (event == 'ready') {
+      if (
+        this.events.pageInfoChange.length &&
+        !this.pageInfoChangeEnabled
+      ) {
+        this.pageInfoChangeEnabled = true;
+        this.pageInfoChange();
+      }
+
       this.isReady = true;
     }
 
