@@ -123,14 +123,17 @@ class Url {
    * @param string $path
    *   The path to get a url for, relative to the theme directory.
    * @param array $options optional
-   *   See self::generate().
+   *   Passed directly to self::generate() +
+   *   'theme': Specify another theme than the currently active
    *
    * @return string
    *   The url to the theme or to the chosen path relative to the
    *   theme.
    */
   static function generateTheme($path = null, $options = array()) {
-    $theme_path = Theme::path();
+    $theme = isset($options['theme']) ? $options['theme'] : null;
+    $theme_path = Theme::path($theme);
+    unset($options['theme']);
 
     if ($path !== null) {
       $theme_path .= '/' . $path;
