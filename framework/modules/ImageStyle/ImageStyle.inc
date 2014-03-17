@@ -1,6 +1,6 @@
 <?php
-Module::loadInclude('ImageStyle', 'classes/ImageStyleActions.inc');
-Module::loadInclude('ImageStyle', 'classes/ImageStyleEffects.inc');
+Module::loadInclude('ImageStyle', 'ImageStyleActions.inc');
+Module::loadInclude('ImageStyle', 'ImageStyleEffects.inc');
 
 /**
  * ImageStyle class.
