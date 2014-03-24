@@ -117,13 +117,55 @@ class Database {
   }
 
   /**
+   * Generate PDO connection arguments.
+   *
+   * @param array $db_info
+   *   The database settings array.
+   *
+   * @return array
+   *   The PDO constructor arguments.
+   */
+  static function getConnectionArgs($db_info) {
+    $pdo_args = array(
+      $db_info['driver'] . ':',
+    );
+
+    // Handle different database servers.
+    switch ($db_info['driver']) {
+      case 'mysql':
+        $pdo_args[0] .= 'host=' . $db_info['host'];
+        $pdo_args[0] .= ';dbname=' . $db_info['name'];
+        $pdo_args[0] .= ';charset=utf-8';
+
+        $pdo_args[1] = $db_info['user'];
+        $pdo_args[2] = $db_info['pass'];
+
+        $pdo_args[3] = array(
+          PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8',
+        );
+        break;
+
+      case 'sqlite':
+        $pdo_args[0] .= $db_info['file'];
+        break;
+
+      default:
+        throw new Exception(
+          'No support for database driver: ' . $db_info['driver']
+        );
+    }
+
+    return $pdo_args;
+  }
+
+  /**
    * Adds a new database connection.
    *
    * Example:
    *
    * <code>
    * Database::add('db2', array(
-   *    'type' => 'mysql',
+   *    'driver' => 'mysql',
    *    'host' => 'localhost',
    *    'name' => 'dbname',
    *    'user' => 'dbuser',
@@ -133,7 +175,7 @@ class Database {
    *
    * <code>
    * Database::add('db3', array(
-   *    'type' => 'sqlite',
+   *    'driver' => 'sqlite',
    *    'file' => VELOX_ROOT . '/application/db.sqlite',
    * ));
    * </code>
@@ -212,34 +254,7 @@ class Database {
 
     $db_info = $db_config[$key];
 
-    $pdo_args = array(
-      $db_info['driver'] . ':',
-    );
-
-    // Handle different database servers.
-    switch ($db_info['driver']) {
-      case 'mysql':
-        $pdo_args[0] .= 'host=' . $db_info['host'];
-        $pdo_args[0] .= ';dbname=' . $db_info['name'];
-        $pdo_args[0] .= ';charset=utf-8';
-
-        $pdo_args[1] = $db_info['user'];
-        $pdo_args[2] = $db_info['pass'];
-
-        $pdo_args[3] = array(
-          PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8',
-        );
-        break;
-
-      case 'sqlite':
-        $pdo_args[0] .= $db_info['file'];
-        break;
-
-      default:
-        throw new Exception(
-          'No support for database driver: ' . $db_info['driver']
-        );
-    }
+    $pdo_args = self::getConnectionArgs($db_info);
 
     // Make sure we catch this pdo error as PDO will throw an
     // exception containing the username and password.
