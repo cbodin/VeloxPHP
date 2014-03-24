@@ -18,11 +18,12 @@ $settings['sitename'] = 'Velox PHP Framework';
 // Database configuration
 $settings['database'] = array(
   'default' => array(
-    'driver' =>   'mysql',
-    'hostname' => 'localhost',
-    'username' => 'root',
-    'password' => 'root',
-    'port' =>     '3306' // Optional
+    'driver'  => 'mysql',
+    'host'    => 'localhost',
+    'user'    => 'root',
+    'pass'    => 'root',
+    'name'    => 'root',
+    'port'    => '3306', // Optional
   ),
 );
 
