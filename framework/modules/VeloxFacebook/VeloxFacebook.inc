@@ -1,7 +1,10 @@
 <?php
 // Set a message if we are missing the Facebook library.
 if (!class_exists('Facebook')) {
-  Message::set('Facebook library missing.');
+  Message::set(
+    'Facebook library missing. Install it using Composer',
+    Message::ERROR
+  );
 }
 
 Module::loadInclude('VeloxFacebook', 'VeloxFacebookActions.inc');
