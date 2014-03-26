@@ -1,6 +1,9 @@
 <?php
 if (!class_exists('RedBean_Facade')) {
-  Message::set('Missing RedBeanPHP library.');
+  Message::set(
+    'Missing RedBeanPHP library. Install it using Composer.',
+    Message::ERROR
+  );
 }
 else {
   class R extends RedBean_Facade {}
