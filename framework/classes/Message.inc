@@ -13,17 +13,17 @@ class Message {
   /**
    * Status severity.
    */
-  const SEVERITY_INFO = 'info';
+  const INFO = 'info';
 
   /**
    * Warning severity.
    */
-  const SEVERITY_WARNING = 'warning';
+  const WARNING = 'warning';
 
   /**
    * Error severity.
    */
-  const SEVERITY_ERROR = 'error';
+  const ERROR = 'error';
 
   /**
    * Sets a message to be printed in the page template later on.
@@ -32,7 +32,7 @@ class Message {
    *   The string to be printed on the page.
    * @param string $severity optional
    *   One of the severity constants.
-   *   Default self::SEVERITY_INFO
+   *   Default self::INFO
    * @param string $key optional
    *   A specific key to allow for overriding previous messages.
    *   Default: null. Will be appended as a numeric index.
@@ -78,7 +78,7 @@ class Message {
    * @param mixed $value
    *   The mixed variable that should be debugged.
    * @param string $key
-   *   See self::set().
+   *    @see self::set().
    *
    * @return mixed
    *   They key that was set.
@@ -94,7 +94,7 @@ class Message {
       ));
     }
 
-    return self::set($string, self::SEVERITY_INFO, $key);
+    return self::set($string, self::INFO, $key);
   }
 
   /**
