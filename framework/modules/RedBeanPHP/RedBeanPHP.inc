@@ -26,7 +26,7 @@ else {
   }
 
   // dont change the database after deployment
-  if (Settings::get('development', false)) {
+  if (!Settings::get('development', false)) {
     R::freeze(true);
   }
 }
