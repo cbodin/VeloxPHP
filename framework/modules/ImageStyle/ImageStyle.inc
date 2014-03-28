@@ -12,18 +12,18 @@ Module::loadInclude('ImageStyle', 'ImageStyleEffects.inc');
  */
 class ImageStyle {
 
-  static function url($image_path) {
-    $path = self::path($image_path);
-    return Url::generate($path);
+  static function url($style, $image_path, $options = array()) {
+    $path = self::path($style, $image_path);
+    return Url::generate($path, $options);
   }
 
-  static function themeUrl($image_path) {
-    $path = self::path($image_path);
-    return Url::generateTheme($path);
+  static function themeUrl($style, $image_path, $options = array()) {
+    $path = self::path($style, $image_path);
+    return Url::generateTheme($path, $options);
   }
 
-  static function path($image_path) {
-    return 'application/files/image-style/' . $image_path;
+  static function path($style, $image_path) {
+    return 'application/files/image-style/' . $style . '/' . $image_path;
   }
 
   static function createImage($style, $image) {
