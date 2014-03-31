@@ -160,13 +160,11 @@ class ImageStyle {
   }
 
   private static function validatePath($path) {
-    // TODO: Validate the path to make sure images outside the public
-    // folders cannot be accessed by adding ../ in the url.
-    return true;
-  }
-
-  private static function validateFilename($filename) {
-    return true;
+    // We check for ".." to make sure directory traversal attacks are
+    // not possible. Some further validation would probably be
+    // necessary for maximum security.
+    
+    return strpos($path, '..') === false;
   }
 
 }
