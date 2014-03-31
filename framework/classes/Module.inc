@@ -44,6 +44,51 @@ class Module {
   private static $actionsIndex = array();
 
   /**
+   * Index for module weights (The order in which actions will be
+   * called).
+   *
+   * @var array
+   */
+  private static $weights = array(
+    'application' => 0,
+  );
+
+  /**
+   * Sets the weight of a module.
+   *
+   * @param string $name
+   *   The name of the module.
+   * @param int $weight
+   *   The weight of the module. -100 is lighter and actions on the
+   *   module will be called earlier than a module with a weight of
+   *   100.
+   */
+  static function setWeight($module, $weight) {
+    self::$weights[$module] = $weight;
+
+    // Resort the actionsIndex array
+    usort(self::$actionsIndex, array('self', 'sortByWeight'));
+  }
+
+  /**
+   * Gets the weight of a module.
+   *
+   * @param string $name
+   *   The name of the module.
+   *
+   * @return int|bool
+   *   The weight of the module. If the module is not loaded it will
+   *   return boolean false.
+   */
+  static function getWeight($module, $weight) {
+    if (isset(self::$weights[$module])) {
+      return self::$weights[$module];
+    }
+    
+    return false;
+  }
+
+  /**
    * Returns an array of callable arrays with the class and method
    * which implements a specific action.
    *
@@ -56,7 +101,8 @@ class Module {
   static function implementsAction($action) {
     $callables = array();
 
-    foreach (self::$actionsIndex as $class) {
+    foreach (self::$actionsIndex as $module) {
+      $class = $module . 'Actions';
       if (method_exists($class, $action)) {
         $callables[] = array($class, $action);
       }
@@ -209,6 +255,7 @@ class Module {
 
         if (is_dir(VELOX_ROOT . '/' . $module_path)) {
           self::$modules[$module] = $module_path;
+          self::$weights[$module] = 0;
 
           // Stop after the first match in a directory
           continue 2;
@@ -244,8 +291,24 @@ class Module {
     require_once VELOX_ROOT . '/' . $path . '/' . $module . '.inc';
 
     if (class_exists($module . 'Actions')) {
-      self::$actionsIndex[] = $module . 'Actions';
+      self::$actionsIndex[] = $module;
     }
+
+    // Sort the actions index based on the module weight
+    usort(self::$actionsIndex, array('self', 'sortByWeight'));
   }
 
+  /**
+   * Usort callback for sorting the module actions by weight.
+   */
+  private static function sortByWeight($a, $b) {
+    $aWeight = self::$weights[$a];
+    $bWeight = self::$weights[$b];
+
+    if ($aWeight == $bWeight) {
+      return 0;
+    }
+
+    return $aWeight < $bWeight ? -1 : 1;
+  }
 }
