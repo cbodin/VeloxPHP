@@ -11,19 +11,24 @@
 class Message {
 
   /**
-   * Status severity.
+   * Info severity.
    */
   const INFO = 'info';
-
-  /**
-   * Warning severity.
-   */
-  const WARNING = 'warning';
 
   /**
    * Error severity.
    */
   const ERROR = 'error';
+
+  /**
+   * Notice severity.
+   */
+  const NOTICE = 'notice';
+
+  /**
+   * Success severity.
+   */
+  const SUCCESS = 'success';
 
   /**
    * Sets a message to be printed in the page template later on.
@@ -94,7 +99,7 @@ class Message {
       ));
     }
 
-    return self::set($string, self::INFO, $key);
+    return self::set($string, self::SUCCESS, $key);
   }
 
   /**
@@ -134,19 +139,19 @@ class Message {
       $item_template = array(
         'name' => 'li',
         'attributes' => array(
-          'class' => array('message'),
+          'class' => array('velox-message'),
         ),
       );
       $wrapper_template = array(
         'name' => 'ul',
         'attributes' => array(
-          'id' => 'messages',
+          'id' => 'velox-messages',
         ),
       );
 
       foreach ($session['messages'] as $message) {
         $item = $item_template;
-        $item['attributes']['class'][] = $message['severity'];
+        $item['attributes']['class'][] = 'velox-message-' . $message['severity'];
         $item['content'] = $message['message'];
         $messages .= Resources::buildHtmlTag($item);
       }
