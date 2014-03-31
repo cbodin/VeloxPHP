@@ -60,57 +60,93 @@ class Velox {
     // Check if a matching route was found. If not, output the 404
     // page.
     if ($page_info !== false) {
-      // Get the current theme if we get a falsely return from the page
-      // callback so we know which theme to output the 404-page in.
-      $current_theme = Theme::getActive();
+      $access = true;
 
-      // check if we explicitly set a theme for this page
-      if (isset($page_info['theme'])) {
-        Theme::setActive($page_info['theme']);
+      // Check if we are authorized to access this page.
+      if ($page_info['access callback'] === false) {
+        $access = false;
+      }
+      elseif ($page_info['access callback'] !== true) {
+        // Access arguments is an array with the value corresponding
+        // to the index of the parts in the route. If you want the
+        // :num from the url a/:num/c as the first argument to the
+        // callback, the access arguments should look like array(1).
+        // You can also specify non-numeric values and they will be
+        // passed directly as they are. This can be used to have the
+        // same access callback for two slightly different routes.
+        $arguments = array();
+        foreach ($page_info['access arguments'] as $argument) {
+          if (is_int($argument)) {
+            $arguments[] = Url::path($argument);
+          }
+          else {
+            $arguments[] = $argument;
+          }
+        }
+
+        self::ensureCallable($page_info['access callback']);
+        $access = call_user_func_array(
+          $page_info['access callback'],
+          $arguments
+        );
       }
 
-      // Check if a file was specified, and include that file.
-      // This can be used to have page callbacks in another file.
-      if (isset($page_info['file'])) {
-        include_once $page_info['file'];
-      }
+      if ($access) {
+        // Get the current theme if we get a falsely return from the page
+        // callback so we know which theme to output the 404-page in.
+        $current_theme = Theme::getActive();
 
-      // Callback arguments is an array with the value corresponding
-      // to the index of the parts in the route. If you want the :num
-      // from the url a/:num/c as the first argument to the callback,
-      // the callback arguments should look like array(0). You can
-      // also specify non-numeric values and they will be passed
-      // directly as they are. This can be used to have one callback
-      // for two slightly different routes.
-      $arguments = array();
-      foreach ($page_info['callback arguments'] as $argument) {
-        if (is_int($argument)) {
-          $arguments[] = Url::path($argument);
+        // check if we explicitly set a theme for this page
+        if (isset($page_info['theme'])) {
+          Theme::setActive($page_info['theme']);
+        }
+
+        // Check if a file was specified, and include that file.
+        // This can be used to have page callbacks in another file.
+        if (isset($page_info['file'])) {
+          include_once $page_info['file'];
+        }
+
+        // Callback arguments is an array with the value corresponding
+        // to the index of the parts in the route. If you want the :num
+        // from the url a/:num/c as the first argument to the callback,
+        // the callback arguments should look like array(1). You can
+        // also specify non-numeric values and they will be passed
+        // directly as they are. This can be used to have one callback
+        // for two slightly different routes.
+        $arguments = array();
+        foreach ($page_info['callback arguments'] as $argument) {
+          if (is_int($argument)) {
+            $arguments[] = Url::path($argument);
+          }
+          else {
+            $arguments[] = $argument;
+          }
+        }
+
+        self::ensureCallable($page_info['callback']);
+        $content = call_user_func_array(
+          $page_info['callback'],
+          $arguments
+        );
+
+        // A falsey return will generate a 404 Page Not Found.
+        if ($content === false) {
+          $content = self::error404();
+
+          Theme::setActive($current_theme);
         }
         else {
-          $arguments[] = $argument;
+          // Set page title
+          if (array_key_exists('title', $page_info)) {
+            self::setTitle($page_info['title']);
+          }
+
+          $output_callback = $page_info['output callback'];
         }
-      }
-
-      self::ensureCallable($page_info['callback']);
-      $content = call_user_func_array(
-        $page_info['callback'],
-        $arguments
-      );
-
-      // A falsey return will generate a 404 Page Not Found.
-      if ($content === false) {
-        $content = self::error404();
-
-        Theme::setActive($current_theme);
       }
       else {
-        // Set page title
-        if (array_key_exists('title', $page_info)) {
-          self::setTitle($page_info['title']);
-        }
-
-        $output_callback = $page_info['output callback'];
+        $content = self::error403();
       }
     }
     else {
@@ -213,6 +249,26 @@ class Velox {
 
     // Let modules alter the title and content for the 404 page.
     Module::alterAction('error404', $title, $content);
+
+    self::setTitle($title);
+    
+    return $content;
+  }
+
+  /**
+   * Error 403 page.
+   *
+   * @return string
+   *   The content of the 403 page.
+   */
+  private static function error403() {
+    header('HTTP/1.0 403 Forbidden');
+
+    $title = 'Access Denied';
+    $content = Theme::render('error-403');
+
+    // Let modules alter the title and content for the 404 page.
+    Module::alterAction('error403', $title, $content);
 
     self::setTitle($title);
     

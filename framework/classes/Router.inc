@@ -75,6 +75,8 @@ class Router {
       $match += array(
         'output callback' => Response::NORMAL,
         'callback arguments' => array(),
+        'access callback' => true,
+        'access arguments' => array(),
       );
 
       // Make sure this is an absolute path to the file.
