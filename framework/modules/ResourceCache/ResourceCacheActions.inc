@@ -2,7 +2,7 @@
 class ResourceCacheActions {
 
   static function js(&$js) {
-    if (ResourceCache::cacheEnabled('css')) {
+    if (ResourceCache::cacheEnabled('js')) {
       $js_groups = ResourceCache::getResourceGroups($js['script']);
       $data = ResourceCache::concatenate($js_groups, 'script');
 
