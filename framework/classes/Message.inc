@@ -129,7 +129,7 @@ class Message {
     $messages = '';
 
     // Build string with messages
-    if (isset($session['messages'])) {
+    if (!empty($session['messages'])) {
       // TODO: Allow for these to be changed by class methods
       $item_template = array(
         'name' => 'li',
