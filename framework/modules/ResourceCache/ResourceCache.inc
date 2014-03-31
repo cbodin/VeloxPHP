@@ -1,4 +1,7 @@
 <?php
+// Set the weight so that preprocessor modules can be run before and
+// possibly preprocess less, sass, coffeescript etc.
+Module::setWeight('ResourceCache', 100);
 Module::loadInclude('ResourceCache', 'ResourceCacheActions.inc');
 
 class ResourceCache {
@@ -149,7 +152,7 @@ class ResourceCache {
           $data .= '@media ' . $style['media'] . " {\n";
         }
 
-        $content = file_get_contents($style['data']);
+        $content = file_get_contents(VELOX_ROOT . '/' . $style['data']);
 
         $data .= self::rewriteCssUrls($style['data'], $content);
 
