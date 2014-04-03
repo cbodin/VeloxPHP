@@ -48,15 +48,20 @@ class Request {
   /**
    * Fetches get variables.
    *
-   * @param string $key
-   *   The get key to fetch.
+   * @param string|null $key optional
+   *   The get key to fetch. If omitted or null the whole get array
+   *   will be returned.
    * @param mixed $default optional
    *   The default value to get when the key doesn't exist.
    *   Default: null
    *
    * @return mixed
    */
-  static function get($key, $default = null) {
+  static function get($key = null, $default = null) {
+    if ($key === null) {
+      return self::ensureClean($_GET);
+    }
+
     if (!isset($_GET[$key])) {
       return $default;
     }
@@ -72,15 +77,20 @@ class Request {
   /**
    * Fetches post variables.
    *
-   * @param string $key
-   *   The post key to fetch.
+   * @param string|null $key optional
+   *   The post key to fetch. If omitted or null the whole post array
+   *   will be returned.
    * @param mixed $default optional
    *   The default value to get when the key doesn't exist.
    *   Default: null
    *
    * @return mixed
    */
-  static function post($key, $default = null) {
+  static function post($key = null, $default = null) {
+    if ($key === null) {
+      return self::ensureClean($_POST);
+    }
+
     if (!isset($_POST[$key])) {
       return $default;
     }
@@ -96,15 +106,20 @@ class Request {
   /**
    * Fetches cookie variables.
    *
-   * @param string $key
-   *   The cookie key to fetch.
+   * @param string|null $key optional
+   *   The cookie key to fetch. If omitted or null all cookies will
+   *   be returned.
    * @param mixed $default optional
    *   The default value to get when the key doesn't exist.
    *   Default: null
    *
    * @return mixed
    */
-  static function cookie($key, $default = null) {
+  static function cookie($key = null, $default = null) {
+    if ($key == null) {
+      return self::ensureClean($_COOKIE);
+    }
+
     if (!isset($_COOKIE[$key])) {
       return $default;
     }
