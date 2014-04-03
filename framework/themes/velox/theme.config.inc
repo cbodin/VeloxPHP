@@ -1,5 +1,5 @@
 <?php
-$css[] = 'css/reset.css';
+$css[] = 'css/normalize.css';
 $css[] = 'css/velox.css';
 
 $js[] = '//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js';
