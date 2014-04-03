@@ -8,6 +8,7 @@ This is still in an early development phase. Features and API can change overnig
 
 ## Installation
 - Rename the *example.settings.php* file to *settings.php* inside the *application* folder.
+- The *application/files* folder should be writable by the user running the script.
 - (optionally) Create a composer.json file in the project root directory and add all external libraries you want. Velox will autoload them when they are being used. Read more about [Composer](http://getcomposer.org/).
 
 ## External libraries
