@@ -12,5 +12,9 @@ application/*
 !application/example.settings.php
 !application/files/.htaccess
 
+# Do not commit cache and image styles
+application/files/cache/*
+application/files/image-style/*
+
 # Editor files
 .idea/*
