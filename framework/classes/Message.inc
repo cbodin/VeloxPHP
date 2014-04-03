@@ -90,7 +90,7 @@ class Message {
    */
   static function debug($value, $key = null) {
     if (class_exists('krumo')) {
-      $string = krumo::dump($value, KRUMO_CAPTURE);
+      $string = krumo::dump($value, KRUMO_RETURN);
     }
     else {
       $string = Resources::buildHtmlTag(array(
@@ -99,7 +99,7 @@ class Message {
       ));
     }
 
-    return self::set($string, self::SUCCESS, $key);
+    return self::set($string, self::INFO, $key);
   }
 
   /**
