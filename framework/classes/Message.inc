@@ -78,7 +78,7 @@ class Message {
   }
 
   /**
-   * Sets a message using print_r() or krumo() if available.
+   * Sets a message using print_r() or krumo::dump() if available.
    *
    * @param mixed $value
    *   The mixed variable that should be debugged.
@@ -90,6 +90,15 @@ class Message {
    */
   static function debug($value, $key = null) {
     if (class_exists('krumo')) {
+      krumo::setConfig(array(
+        'skin' => array('selected' => 'blue'),
+      ));
+
+      krumo::setLineNumberTestCallback(array(
+        'Message',
+        'krumoLineNumberTestCallback'
+      ));
+
       $string = krumo::dump($value, KRUMO_RETURN);
     }
     else {
@@ -100,6 +109,21 @@ class Message {
     }
 
     return self::set($string, self::INFO, $key);
+  }
+
+  /**
+   * Line number test callback for krumo::dump() to set correct
+   * called from and line number.
+   */
+  static function krumoLineNumberTestCallback($backtrace) {
+    if (isset($backtrace['class'])) {
+      $class = strtolower($backtrace['class']);
+      $method = strtolower($backtrace['function']);
+
+      if ($class == 'message' && $method == 'debug') {
+        return true;
+      }
+    }
   }
 
   /**
