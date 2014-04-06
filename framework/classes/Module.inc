@@ -58,7 +58,7 @@ class Module {
     );
 
     // Resort the actionsIndex
-    self::resortActionIndex();
+    self::resortActionIndex($action);
   }
 
   /**
@@ -72,11 +72,13 @@ class Module {
    * @param int $weight
    */
   static function setActionCallbackWeight($action, $callable, $weight) {
-    foreach (self::$actionsIndex[$action] as &$callbacks) {
-      if ($callbacks['callable'] === $callable) {
-        $callbacks['weight'] = $weight;
-        self::resortActionIndex();
-        break;
+    if (isset(self::$actionsIndex[$action])) {
+      foreach (self::$actionsIndex[$action] as &$callbacks) {
+        if ($callbacks['callable'] === $callable) {
+          $callbacks['weight'] = $weight;
+          self::resortActionIndex($action);
+          break;
+        }
       }
     }
   }
@@ -90,15 +92,20 @@ class Module {
    *   The callable as previously set by calling
    *   Module::addActionCallback().
    *   
-   * @return int
-   *   The weight of the callable
+   * @return int|bool
+   *   The weight of the callable or boolean false if no callback for
+   *   the action was set.
    */
   static function getActionCallbackWeight($action, $callable) {
-    foreach (self::$actionsIndex[$action] as $callbacks) {
-      if ($callbacks['callable'] === $callable) {
-        return $callbacks['weight'];
+    if (isset(self::$actionsIndex[$action])) {
+      foreach (self::$actionsIndex[$action] as $callbacks) {
+        if ($callbacks['callable'] === $callable) {
+          return $callbacks['weight'];
+        }
       }
-    }
+    }   
+
+    return false;
   }
 
   /**
