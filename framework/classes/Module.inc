@@ -24,11 +24,6 @@ class Module {
   /**
    * Directories which should be scanned for modules.
    *
-   * The order here is important as the first directory
-   * self::findModules() finds a module inside will be the module of
-   * choice. This allows for the application to override a framework
-   * module if that should be necessary.
-   *
    * @var array
    */
   private static $moduleDirectories = array(
@@ -37,55 +32,73 @@ class Module {
   );
 
   /**
-   * Index of which modules implements a {Module Name}Actions class.
+   * Index of callables registered for an action.
    *
    * @var array
    */
   private static $actionsIndex = array();
 
   /**
-   * Index for module weights (The order in which actions will be
-   * called).
+   * Add an action callback.
    *
-   * @var array
+   * @param string $action
+   *   The name of the action to add a callback for.
+   * @param string $callable
+   *   The callable which should be called whenever an action occurs.
+   * @param int $weight optional
+   *   The weight is the order of which all callbacks for a specific
+   *   action will be called. A lower number will be called before a
+   *   higher one which means that an action callback with the weight
+   *   of -10 will be called before a callback with a weight of 10.
    */
-  private static $weights = array(
-    'application' => 0,
-  );
+  static function addActionCallback($action, $callable, $weight = 0) {
+    self::$actionsIndex[$action][] = array(
+      'callable' => $callable,
+      'weight' => $weight,
+    );
 
-  /**
-   * Sets the weight of a module.
-   *
-   * @param string $name
-   *   The name of the module.
-   * @param int $weight
-   *   The weight of the module. -100 is lighter and actions on the
-   *   module will be called earlier than a module with a weight of
-   *   100.
-   */
-  static function setWeight($module, $weight) {
-    self::$weights[$module] = $weight;
-
-    // Resort the actionsIndex array
-    usort(self::$actionsIndex, array('self', 'sortByWeight'));
+    // Resort the actionsIndex
+    self::resortActionIndex();
   }
 
   /**
-   * Gets the weight of a module.
+   * Sets the weight of an action callback.
    *
-   * @param string $name
-   *   The name of the module.
-   *
-   * @return int|bool
-   *   The weight of the module. If the module is not loaded it will
-   *   return boolean false.
+   * @param string $action
+   *   The name of the action.
+   * @param string $callable
+   *   The callable as previously set by calling
+   *   Module::addActionCallback().
+   * @param int $weight
    */
-  static function getWeight($module, $weight) {
-    if (isset(self::$weights[$module])) {
-      return self::$weights[$module];
+  static function setActionCallbackWeight($action, $callable, $weight) {
+    foreach (self::$actionsIndex[$action] as &$callbacks) {
+      if ($callbacks['callable'] === $callable) {
+        $callbacks['weight'] = $weight;
+        self::resortActionIndex();
+        break;
+      }
     }
-    
-    return false;
+  }
+
+  /**
+   * Gets the weight of an action callback.
+   *
+   * @param string $action
+   *   The name of the action.
+   * @param string $callable
+   *   The callable as previously set by calling
+   *   Module::addActionCallback().
+   *   
+   * @return int
+   *   The weight of the callable
+   */
+  static function getActionCallbackWeight($action, $callable) {
+    foreach (self::$actionsIndex[$action] as $callbacks) {
+      if ($callbacks['callable'] === $callable) {
+        return $callbacks['weight'];
+      }
+    }
   }
 
   /**
@@ -101,13 +114,12 @@ class Module {
   static function implementsAction($action) {
     $callables = array();
 
-    foreach (self::$actionsIndex as $module) {
-      $class = $module . 'Actions';
-      if (method_exists($class, $action)) {
-        $callables[] = array($class, $action);
+    if (isset(self::$actionsIndex[$action])) {
+      foreach (self::$actionsIndex[$action] as $callbacks) {
+        $callables[] = $callbacks['callable'];
       }
     }
-
+    
     return $callables;
   }
 
@@ -127,11 +139,11 @@ class Module {
     $arguments = array();
 
     if ($args_num >= 2) {
-      $arguments[] = &$data1;
+      $arguments[] =& $data1;
     }
 
     if ($args_num >= 3) {
-      $arguments[] = &$data2;
+      $arguments[] =& $data2;
     }
 
     foreach (self::implementsAction($action) as $callable) {
@@ -280,7 +292,7 @@ class Module {
   }
 
   /**
-   * Includes the module and checks if it implements an Actions class.
+   * Includes the module.
    *
    * @param string $module
    *   The name of the module.
@@ -289,26 +301,29 @@ class Module {
    */
   private static function includeModule($module, $path) {
     require_once VELOX_ROOT . '/' . $path . '/' . $module . '.inc';
+  }
 
-    if (class_exists($module . 'Actions')) {
-      self::$actionsIndex[] = $module;
-    }
-
-    // Sort the actions index based on the module weight
-    usort(self::$actionsIndex, array('self', 'sortByWeight'));
+  /**
+   * Resorts the actions index based on the weights.
+   *
+   * @param string $action optional
+   *   The callbacks of this actions will be resorted.
+   */
+  private static function resortActionIndex($action) {
+    usort(self::$actionsIndex[$action], array(
+      'self',
+      'sortByWeight'
+    ));
   }
 
   /**
    * Usort callback for sorting the module actions by weight.
    */
   private static function sortByWeight($a, $b) {
-    $aWeight = self::$weights[$a];
-    $bWeight = self::$weights[$b];
-
-    if ($aWeight == $bWeight) {
+    if ($a['weight'] == $b['weight']) {
       return 0;
     }
 
-    return $aWeight < $bWeight ? -1 : 1;
+    return $a['weight'] < $b['weight'] ? -1 : 1;
   }
 }
