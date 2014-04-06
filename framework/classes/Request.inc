@@ -133,6 +133,15 @@ class Request {
   }
 
   /**
+   * Gets the current request method. Either 'POST' or 'GET'.
+   *
+   * @return string
+   */
+  static function method() {
+    return $_SERVER['REQUEST_METHOD'];
+  }
+
+  /**
    * Ensures that the variable has been cleaned of magic quotes.
    *
    * @param mixed $value
