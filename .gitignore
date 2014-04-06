@@ -16,5 +16,8 @@ application/*
 application/files/cache/*
 application/files/image-style/*
 
+# Do not commit vendor
+vendor/*
+
 # Editor files
 .idea/*
