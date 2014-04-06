@@ -1,6 +1,4 @@
 <?php
-Module::addActionCallback('routeMatch', 'ImageStyle::checkImageStyleMatch');
-
 /**
  * ImageStyle class.
  *
@@ -60,6 +58,9 @@ class ImageStyle {
         throw new Exception('Unsupported image type.');
     }
 
+    // Include effects class.
+    Module::loadInclude('ImageStyle', 'ImageStyleEffects.inc');
+
     $create_function = 'imagecreatefrom' . $type;
     $save_function = 'image' . $type;
 
@@ -73,9 +74,6 @@ class ImageStyle {
       // Png output is in the range from 0 (best) to 9 (worst)
       $quality = round((100 - $quality) * 0.09);
     }
-
-    // Include effects class.
-    Module::loadInclude('ImageStyle', 'ImageStyleEffects.inc');
 
     foreach ($style_info as $effect) {
       $args = array(

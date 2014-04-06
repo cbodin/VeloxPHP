@@ -1,7 +1,4 @@
 <?php
-// Load the po parser class
-Module::loadInclude('Language', 'poparser.php');
-
 /**
  * Language class.
  *
@@ -128,6 +125,9 @@ class Language {
     $file = VELOX_ROOT . '/application/translations/' . $locale . '.po';
 
     if (file_exists($file)) {
+      // Load the po parser class
+      Module::loadInclude('Language', 'classes/poparser.php');
+      
       $poparser = new PoParser();
       self::$translations[$locale] = $poparser->read($file);
     }

@@ -22,7 +22,7 @@ class VeloxFacebookActions {
       ), 'settings');
       
       Resources::addJs(array(
-        'data' => Module::path('VeloxFacebook') . '/velox.facebook.js',
+        'data' => Module::path('VeloxFacebook') . '/js/velox.facebook.js',
       ));
     }
   }
