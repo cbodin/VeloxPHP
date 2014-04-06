@@ -1,6 +1,5 @@
 <?php
-Module::loadInclude('ImageStyle', 'ImageStyleActions.inc');
-Module::loadInclude('ImageStyle', 'ImageStyleEffects.inc');
+Module::addActionCallback('routeMatch', 'ImageStyle::checkImageStyleMatch');
 
 /**
  * ImageStyle class.
@@ -75,6 +74,9 @@ class ImageStyle {
       $quality = round((100 - $quality) * 0.09);
     }
 
+    // Include effects class.
+    Module::loadInclude('ImageStyle', 'ImageStyleEffects.inc');
+
     foreach ($style_info as $effect) {
       $args = array(
         $image_gd,
@@ -105,7 +107,13 @@ class ImageStyle {
     Url::reload();
   }
 
-  static function checkImageStyleMatch() {
+  static function checkImageStyleMatch($route_info) {
+    // We will only check if this is a image style request if no route
+    // is matched.
+    if ($route_info !== false) {
+      return;
+    }
+
     $path = Url::path();
     $style_path = 'application/files/image-style/';
 

@@ -1,8 +1,10 @@
 <?php
+Module::loadInclude('ResourceCache', 'ResourceCacheActions.inc');
+
 // Set the weight so that preprocessor modules can be run before and
 // possibly preprocess less, sass, coffeescript etc.
-Module::setWeight('ResourceCache', 100);
-Module::loadInclude('ResourceCache', 'ResourceCacheActions.inc');
+Module::addActionCallback('js', 'ResourceCacheActions::js', 100);
+Module::addActionCallback('css', 'ResourceCacheActions::css', 100);
 
 class ResourceCache {
 
