@@ -274,7 +274,6 @@ class Module {
 
         if (is_dir(VELOX_ROOT . '/' . $module_path)) {
           self::$modules[$module] = $module_path;
-          self::$weights[$module] = 0;
 
           // Stop after the first match in a directory
           continue 2;
