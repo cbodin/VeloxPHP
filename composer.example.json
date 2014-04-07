@@ -1,0 +1,8 @@
+{
+  "require": {
+    "gabordemooij/redbean": "dev-master",
+    "leafo/scssphp": "dev-master",
+    "facebook/php-sdk": "@stable",
+    "oodle/krumo": "dev-master"
+  }
+}
