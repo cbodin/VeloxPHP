@@ -14,7 +14,6 @@ This is still in an early development phase. Features and API can change overnig
 ## External libraries
 Some built in modules requires some libraries to be installed via composer:
 
-- The RedBeanPHP module requires the [RedBeanPHP library](https://github.com/gabordemooij/redbean).
 - The VeloxFacebook module requires the [Facebook PHP SDK](https://github.com/facebook/facebook-php-sdk).
 - The Message::debug() method will output the code using [Krumo](https://github.com/oodle/krumo) if it's installed.
 - The Sass module requires the [scssphp library](https://github.com/leafo/scssphp/).

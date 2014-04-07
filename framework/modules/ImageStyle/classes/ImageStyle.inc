@@ -59,7 +59,7 @@ class ImageStyle {
     }
 
     // Include effects class.
-    Module::loadInclude('ImageStyle', 'ImageStyleEffects.inc');
+    Module::loadInclude('ImageStyle', 'classes/ImageStyleEffects.inc');
 
     $create_function = 'imagecreatefrom' . $type;
     $save_function = 'image' . $type;
