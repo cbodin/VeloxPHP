@@ -344,7 +344,7 @@ class Url {
         }
         
         // Remove the s in https
-        $url = substr_replace($url, '', 4, 5);
+        $url = substr_replace($url, '', 4, 1);
 
         self::$urls['unsecure'] = $url;
       }

@@ -1,6 +1,23 @@
 #velox-messages {
   position: relative;
   padding: 20px 0;
+  list-style: none;
+}
+
+#velox-messages ul {
+  list-style-type: square;
+  list-style-position: outside;
+  padding: 0 0 0 20px;
+}
+
+#velox-messages h1,
+#velox-messages h2,
+#velox-messages h3,
+#velox-messages h4,
+#velox-messages h5 {
+  font-size: 15px;
+  color: #fff;
+  margin: 0 0 5px;
 }
 
 #velox-messages .velox-message {

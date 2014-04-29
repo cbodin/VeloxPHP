@@ -79,7 +79,7 @@ class VeloxFacebook {
    *
    * @return bool
    */
-  function likesPage() {
+  static function likesPage() {
     $facebook = self::getInstance();
 
     $signed_request = $facebook->getSignedRequest();
