@@ -69,6 +69,10 @@ class Url {
       'clean'    => Settings::get('clean_urls', true),
     );
 
+    // Let modules alter the options and path before generating the
+    // url.
+    Module::alterAction('preUrlGenerate', $path, $options);
+
     $site_urls = self::get();
 
     if ($options['scheme'] == 'http') {
@@ -113,6 +117,12 @@ class Url {
     if (!empty($options['fragment'])) {
       $url .= '#' . $options['fragment'];
     }
+
+    // Let modules alter the url before output
+    Module::alterAction('postUrlGenerate', $url, array(
+      'path' => $path,
+      'options' => $options,
+    ));
 
     return $url;
   }
