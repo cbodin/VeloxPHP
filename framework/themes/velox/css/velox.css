@@ -20,6 +20,10 @@
   margin: 0 0 5px;
 }
 
+#velox-messages a {
+  color: #fff;
+}
+
 #velox-messages .velox-message {
   margin-top: 10px;
   padding: 19px 35px 19px 55px;
