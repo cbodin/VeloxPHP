@@ -118,11 +118,13 @@ class Url {
       $url .= '#' . $options['fragment'];
     }
 
-    // Let modules alter the url before output
-    Module::alterAction('postUrlGenerate', $url, array(
+    $action_info = array(
       'path' => $path,
       'options' => $options,
-    ));
+    );
+
+    // Let modules alter the url before output
+    Module::alterAction('postUrlGenerate', $url, $action_info);
 
     return $url;
   }
