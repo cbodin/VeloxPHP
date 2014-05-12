@@ -183,8 +183,6 @@ class Variable {
   private static function checkDb() {
     // check if this function was called before
     if (!self::$tableInstalled) {
-      global $config;
-
       // Get the active database key
       $active_db = Database::getActive();
       $driver = Database::getDriver();
@@ -228,7 +226,7 @@ class Variable {
       $table = $sth->fetchColumn();
 
       if (!$table) {
-        switch ($config['database'][$active_db]['driver']) {
+        switch ($driver) {
           case 'mysql':
             $query = '
               CREATE TABLE velox_variables (
