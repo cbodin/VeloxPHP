@@ -18,7 +18,8 @@ foreach (Settings::get('database', array()) as $dbkey => $dbinfo) {
   call_user_func_array(array('R', $method), $args);
 }
 
-// dont change the database after deployment
-if (!Settings::get('development', false)) {
+$settings = Settings::get('RedBeanPHP', array());
+
+if (isset($settings) && $settings['freeze']) {
   R::freeze(true);
 }
