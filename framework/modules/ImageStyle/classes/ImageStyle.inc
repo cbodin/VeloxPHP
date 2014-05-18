@@ -38,7 +38,7 @@ class ImageStyle {
     $image_dir .= $style . '/' . dirname($image);
 
     // Create the directories if they dont exist already.
-    if (!FileSystem::mkdir(VELOX_ROOT . '/' . $image_dir, 0666)) {
+    if (!FileSystem::mkdir(VELOX_ROOT . '/' . $image_dir, 0777)) {
       throw new Exception('Could not create directories.');
     }
 
@@ -98,7 +98,7 @@ class ImageStyle {
       throw new Exception('Could not save image.');
     }
 
-    FileSystem::chmod($destination, 0666);
+    FileSystem::chmod($destination, 0777);
     
     Url::reload();
   }

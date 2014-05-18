@@ -22,7 +22,7 @@ class Sass {
       $data = self::rewriteCssUrls($css['data'], $data);
 
       file_put_contents(VELOX_ROOT . '/' . $filename, $data);
-      FileSystem::chmod(VELOX_ROOT . '/' . $filename, 0666);
+      FileSystem::chmod(VELOX_ROOT . '/' . $filename, 0777);
     }
 
     $css['data'] = $filename;
