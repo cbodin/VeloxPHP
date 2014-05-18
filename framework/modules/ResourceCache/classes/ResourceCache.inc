@@ -113,7 +113,7 @@ class ResourceCache {
       }
 
       file_put_contents(VELOX_ROOT . '/' . $filename, $data);
-      chmod(VELOX_ROOT . '/' . $filename, 0666);
+      FileSystem::chmod(VELOX_ROOT . '/' . $filename, 0666);
     }
 
     return $filename;
@@ -155,7 +155,7 @@ class ResourceCache {
       }
 
       file_put_contents(VELOX_ROOT . '/' . $filename, $data);
-      chmod(VELOX_ROOT . '/' . $filename, 0666);
+      FileSystem::chmod(VELOX_ROOT . '/' . $filename, 0666);
     }
 
     return $filename;
@@ -190,11 +190,7 @@ class ResourceCache {
 
   private static function ensureCacheDirExists() {
     $cache_dir = VELOX_ROOT . '/application/files/cache';
-
-    if (!is_dir($cache_dir)) {
-      mkdir($cache_dir);
-      chmod($cache_dir, 0666);
-    }
+    FileSystem::mkdir($cache_dir, 0666);
   }
 
 }
