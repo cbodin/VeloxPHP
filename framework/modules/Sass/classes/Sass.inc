@@ -22,7 +22,7 @@ class Sass {
       $data = self::rewriteCssUrls($css['data'], $data);
 
       file_put_contents(VELOX_ROOT . '/' . $filename, $data);
-      chmod(VELOX_ROOT . '/' . $filename, 0666);
+      FileSystem::chmod(VELOX_ROOT . '/' . $filename, 0666);
     }
 
     $css['data'] = $filename;
@@ -59,9 +59,7 @@ class Sass {
   private static function ensureCacheDirExists($directory) {
     $cache_dir = VELOX_ROOT . '/' . $directory;
 
-    if (!is_dir($cache_dir)) {
-      mkdir($cache_dir, 0777, true);
-    }
+    FileSystem::mkdir($cache_dir, 0777);
   }
 
 }
