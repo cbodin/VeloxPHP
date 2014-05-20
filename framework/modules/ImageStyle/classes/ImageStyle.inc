@@ -38,10 +38,8 @@ class ImageStyle {
     $image_dir .= $style . '/' . dirname($image);
 
     // Create the directories if they dont exist already.
-    if (!is_dir(VELOX_ROOT . '/' . $image_dir)) {
-      if (!mkdir(VELOX_ROOT . '/' . $image_dir, 0777, true)) {
-        throw new Exception('Could not create directories.');
-      }
+    if (!FileSystem::mkdir(VELOX_ROOT . '/' . $image_dir, 0777)) {
+      throw new Exception('Could not create directories.');
     }
 
     // Validate image mime
@@ -100,7 +98,7 @@ class ImageStyle {
       throw new Exception('Could not save image.');
     }
 
-    chmod($destination, 0777);
+    FileSystem::chmod($destination, 0777);
     
     Url::reload();
   }
