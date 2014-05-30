@@ -17,7 +17,8 @@
     FB.Canvas.getPageInfo(function(info) {
       // Loop trough all info and see if any properties has changed.
       for (var k in info) {
-        if (that.lastPageInfo[k] != info[k]) {
+        if (that.lastPageInfo[k] !== info[k]) {
+          that.lastPageInfo = info;
           that.trigger('pageInfoChange', info);
           break;
         }
