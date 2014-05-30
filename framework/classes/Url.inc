@@ -395,7 +395,7 @@ class Url {
     $scheme = self::https() ? 'https' : 'http';
 
     // Create the url
-    $url = $scheme . '://' . $_SERVER['SERVER_NAME'];
+    $url = $scheme . '://' . $_SERVER['HTTP_HOST'];
 
     // Check if this is the default port for the scheme
     if (
