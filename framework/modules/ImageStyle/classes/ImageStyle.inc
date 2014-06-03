@@ -73,23 +73,24 @@ class ImageStyle {
       $quality = round((100 - $quality) * 0.09);
     }
 
-    foreach ($style_info as $effect) {
-      $args = array(
-        $image_gd,
-        $type, 
-      );
+    // Create an object image object that the effects can manipulate
+    $image = new stdClass;
+    $image->resource = $image_gd;
+    $image->type = $type;
+    $image->file = $source;
 
-      if (isset($effect['options'])) {
-        $args[] = $effect['options'];
+    foreach ($style_info as $effect) {
+      if (!isset($effect['options'])) {
+        $effect['options'] = array();
       }
 
       Velox::ensureCallable($effect['effect']);
-      $image_gd = call_user_func_array($effect['effect'], $args);
+      call_user_func($effect['effect'], $image, $effect['options']);
     }
 
     $destination = VELOX_ROOT . '/' . $image_dir . '/' . $filename;
     $result = call_user_func_array($save_function, array(
-      $image_gd,
+      $image->resource,
       $destination,
       $quality,
     ));
@@ -99,8 +100,14 @@ class ImageStyle {
     }
 
     FileSystem::chmod($destination, 0777);
-    
-    Url::reload();
+
+    header('Content-type: image/' . $type);
+    call_user_func_array($save_function, array(
+      $image->resource,
+      null,
+      $quality,
+    ));
+    exit;
   }
 
   static function checkImageStyleMatch($route_info) {
