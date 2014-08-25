@@ -205,7 +205,9 @@ class ImageStyleEffects {
     }
 
     if ($orientation !== 0) {
-      $image->resource = imagerotate($image->resource, $orientation, 0);
+      $new_image = imagerotate($image->resource, $orientation, 0);
+      imagedestroy($image->resource);
+      $image->resource = $new_image;
     }
   }
 
