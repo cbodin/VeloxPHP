@@ -141,7 +141,7 @@ class ImageStyle {
         return;
       }
 
-      Module::invokeAction('image-style-pre-match', $image);
+      Module::invokeAction('image-style-pre-match', $image, $style);
 
       if (!file_exists(VELOX_ROOT . '/' . $image)) {
         return;
