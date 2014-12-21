@@ -31,7 +31,7 @@ require_once VELOX_ROOT . '/framework/includes/constants.inc';
 // Fake $_SERVER globals if the app is running via the cli as some
 // classes depends on them.
 if (VELOX_CLI) {
-  $_SERVER['SERVER_NAME'] = 'localhost';
+  $_SERVER['HTTP_HOST'] = 'localhost';
   $_SERVER['SERVER_PORT'] = 80;
   $_SERVER['SCRIPT_NAME'] = '/index.php';
   $_SERVER['REQUEST_URI'] = '/';
