@@ -1,7 +1,5 @@
 <!DOCTYPE html>
-<!--[if IE 7]>         <html class="lt-ie9 lt-ie8" lang="<?php print $language; ?>"> <![endif]-->
-<!--[if IE 8]>         <html class="lt-ie9" lang="<?php print $language; ?>"> <![endif]-->
-<!--[if gt IE 8]><!--> <html lang="<?php print $language; ?>"> <!--<![endif]-->
+<html lang="<?php print $language; ?>">
 <head>
   <?php print $head; ?>
   <?php print $css; ?>
