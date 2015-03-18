@@ -2,6 +2,7 @@
   "require": {
     "leafo/scssphp": "dev-master",
     "facebook/php-sdk": "@stable",
+    "facebook/php-sdk-v4": "@stable",
     "oodle/krumo": "dev-master"
   }
 }

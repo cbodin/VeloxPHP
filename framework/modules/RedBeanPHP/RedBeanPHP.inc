@@ -20,6 +20,6 @@ foreach (Settings::get('database', array()) as $dbkey => $dbinfo) {
 
 $settings = Settings::get('RedBeanPHP', array());
 
-if (isset($settings) && $settings['freeze']) {
+if (isset($settings['freeze']) && $settings['freeze']) {
   R::freeze(true);
 }

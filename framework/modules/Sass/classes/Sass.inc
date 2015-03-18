@@ -16,6 +16,7 @@ class Sass {
     if ($build) {
       self::ensureCacheDirExists(dirname($filename));
       $scssc = new scssc();
+      $scssc->addImportPath(VELOX_ROOT . '/' . dirname($css['data']));
 
       $content = file_get_contents(VELOX_ROOT . '/' . $css['data']);
       $data = $scssc->compile($content);

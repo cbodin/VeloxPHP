@@ -1,7 +1,7 @@
 <?php
 class ImageStyleEffects {
   
-  static function resize($image, $type, $options) {
+  static function resize($image, $options = array()) {
     // Validate options.
     if (!isset($options['width']) && !isset($options['height'])) {
       throw new Exception('Missing width and height.');
@@ -17,8 +17,8 @@ class ImageStyleEffects {
     );
 
     // Get image width and height
-    $width = imagesx($image);
-    $height = imagesy($image);
+    $width = imagesx($image->resource);
+    $height = imagesy($image->resource);
 
     // If width or height is not defined we need to enforce preserve
     // ratio
@@ -42,7 +42,7 @@ class ImageStyleEffects {
       !$options['upscaling'] &&
       ($options['width'] > $width || $options['height'] > $height)
     ) {
-      return $image;
+      return $image->resource;
     }
 
     if ($options['preserve-ratio']) {
@@ -69,7 +69,7 @@ class ImageStyleEffects {
       $dest_height
     );
 
-    if ($type == 'png') {
+    if ($image->type == 'png') {
       imagealphablending($new_image, true);
       imagesavealpha($new_image, true);
 
@@ -79,19 +79,18 @@ class ImageStyleEffects {
     }
 
     imagecopyresampled(
-      $new_image, $image,
+      $new_image, $image->resource,
       0, 0,
       0, 0,
       $dest_width, $dest_height,
       $width, $height
     );
 
-    imagedestroy($image);
-
-    return $new_image;
+    imagedestroy($image->resource);
+    $image->resource = $new_image;
   }
   
-  static function crop($image, $type, $options) {
+  static function crop($image, $options) {
     // Validate options.
     if (!isset($options['width']) || !isset($options['height'])) {
       throw new Exception('Missing width or height.');
@@ -118,12 +117,12 @@ class ImageStyleEffects {
       $options['height']
     );
 
-    if ($type == 'png') {
+    if ($image->type == 'png') {
       imagealphablending($new_image, true);
       imagesavealpha($new_image, true);
     }
 
-    switch ($type) {
+    switch ($image->type) {
       case 'jpeg':
         $rgb = self::hex2rgb($options['fill-background-jpeg']);
         $color = imagecolorallocate(
@@ -148,8 +147,8 @@ class ImageStyleEffects {
     imagefill($new_image, 0, 0, $color);
 
     // Get image width and height
-    $width = imagesx($image);
-    $height = imagesy($image);
+    $width = imagesx($image->resource);
+    $height = imagesy($image->resource);
 
     switch ($anchors[0]) {
       case 'left':
@@ -174,15 +173,42 @@ class ImageStyleEffects {
     }
 
     imagecopy(
-      $new_image, $image,
+      $new_image, $image->resource,
       $left, $top, 
       0, 0, 
       $width, $height
     );
 
-    imagedestroy($image);
+    imagedestroy($image->resource);
+    $image->resource = $new_image;
+  }
 
-    return $new_image;
+  static function exifRotate($image, $options = array()) {
+    $exif = exif_read_data($image->file);
+
+    $orientation = 0;
+
+    if (isset($exif['Orientation'])) {
+      switch ($exif['Orientation']) {
+        case 3:
+          $orientation = 180;
+          break;
+
+        case 6:
+          $orientation = -90;
+          break;
+
+        case 8:
+          $orientation = 90;
+          break;
+      }
+    }
+
+    if ($orientation !== 0) {
+      $new_image = imagerotate($image->resource, $orientation, 0);
+      imagedestroy($image->resource);
+      $image->resource = $new_image;
+    }
   }
 
   private static function hex2rgb($hex) {
