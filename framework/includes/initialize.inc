@@ -14,7 +14,9 @@ header('P3P: CP="CAO PSA OUR"');
 setlocale(LC_ALL, 'C');
 
 // Make sure the internal encoding is UTF-8.
-mb_internal_encoding('UTF-8');
+if (function_exists('mb_internal_encoding')) {
+  mb_internal_encoding('UTF-8');
+}
 
 // Velox autoload function for classes.
 function velox_spl_autoload($class_name) {
