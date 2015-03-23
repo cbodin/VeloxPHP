@@ -18,7 +18,10 @@ class Application {
   /**
   * Page callback for the street page
   */
-  static function page_street() {
+  static function page_street($city, $street) {
+    print "<br /><br /><br /><pre>"; print_r($city); print "</pre>";
+    print "<br /><br /><br /><pre>"; print_r($street); print "</pre>";
+    
     Theme::addBodyClass('street');
     return Theme::render('page-street');
   }    

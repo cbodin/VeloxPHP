@@ -20,6 +20,7 @@ class ApplicationActions {
     
     $routes[':alpha/:alpha'] = array(
       'callback' => 'Application::page_street',
+      'callback arguments' => array(0, 1),
       'output callback' => Response::NORMAL,
     );
 
