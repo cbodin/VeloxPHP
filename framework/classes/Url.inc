@@ -391,6 +391,11 @@ class Url {
 
     // print $directory;
 
+    // Get the root directory right on Windows
+    if ($directory === '\\') {
+      $directory = '';
+    }
+
     $port = $_SERVER['SERVER_PORT'];
     $scheme = self::https() ? 'https' : 'http';
 
