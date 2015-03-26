@@ -35,8 +35,28 @@ $settings['application'] = array();
 // when running on the production server.
 $settings['development'] = true;
 
-// Enabled modules
-$settings['modules'] = array();
+// Enable error_logging to application/error.log file
+$settings['error_logging'] = true;
+
+// Enabled modules (Sass and VeloxFacebook are core modules and GA and Admin are custom modules)
+$settings['modules'] = array(
+  'Sass',
+  'VeloxFacebook',
+  'GoogleAnalytics',
+  'Admin',
+);
+
+// Setup facebook settings
+$settings['VeloxFacebook'] = array(
+  'appId' => '318001688409384',
+  'secret' => '2cdbedf8798ab4217163284ede5b7349', 
+);
+
+// Setup google analytics settings
+$settings['GoogleAnalytics'] = array(
+  'id' => 'UA-61136629-1',
+  'page_track' => false,
+);
 
 // The default theme
 $settings['theme'] = 'my-theme';
