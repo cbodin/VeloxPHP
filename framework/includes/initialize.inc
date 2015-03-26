@@ -52,6 +52,12 @@ if (Settings::get('development', false)) {
   error_reporting(0);
 }
 
+// Turn on error logging to file 
+if (Settings::get('error_logging', false)) {
+  ini_set("log_errors", 1);
+  ini_set("error_log", dirname(dirname(dirname(__FILE__))) . '/application/error.log');
+}
+
 // Include composer autoload if it exists
 if (file_exists(VELOX_ROOT . '/vendor/autoload.php')) {
   require_once VELOX_ROOT . '/vendor/autoload.php';
