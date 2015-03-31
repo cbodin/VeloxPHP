@@ -389,8 +389,6 @@ class Url {
     // Get any subdirectory the script might be running inside.
     $directory = trim(dirname($_SERVER['SCRIPT_NAME']), '/');
 
-    // print $directory;
-
     // Get the root directory right on Windows
     if ($directory === '\\') {
       $directory = '';
