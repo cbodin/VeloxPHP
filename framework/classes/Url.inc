@@ -97,12 +97,20 @@ class Url {
 
     // Check if this is not a url to the front page.
     if (!empty($path) && $path != '/') {
+      // Remove query params if we need to check for non-clean urls.
+      $no_query_path = $path;
+      $query_index = strripos($no_query_path, '?');
+
+      if ($query_index !== FALSE) {
+        $no_query_path = substr($no_query_path, 0, $query_index);
+      }
+      
       // If clean urls are disabled, add index.php to the url.
       // Check if this is a url to a static file as we cannot add
       // index.php to the url in that case.
       if (
         !$options['clean'] &&
-        !file_exists(VELOX_ROOT . '/' . $path)
+        !file_exists(VELOX_ROOT . '/' . $no_query_path)
       ) {
         $url .= 'index.php/';
       }
