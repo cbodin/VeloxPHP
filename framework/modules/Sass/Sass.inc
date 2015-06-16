@@ -1,5 +1,5 @@
 <?php
-// Set a message if we are missing the Facebook library.
+// Set a message if we are missing the scssphp library.
 if (!class_exists('scssc')) {
   Message::set(
     'https://github.com/leafo/scssphp/ library missing. Install it using Composer.',

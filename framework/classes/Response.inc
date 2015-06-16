@@ -179,7 +179,7 @@ class Response {
     // Add default variables
     $html_variables['language'] = Settings::get('language');
     $html_variables['content'] = $page_content;
-    $html_variables['classes'] = Theme::getBodyClasses();
+    $html_variables['classes_array'] = Theme::getBodyClasses();
     $html_variables['js'] = $js_html;
     $html_variables['css'] = $css_html;
     $html_variables['page_top'] = Theme::getPage('top');
@@ -211,7 +211,7 @@ class Response {
     // Concatenate body classes
     $html_variables['classes'] = implode(
       ' ',
-      $html_variables['classes']
+      $html_variables['classes_array']
     );
 
     // Concatenate page top and page bottom
